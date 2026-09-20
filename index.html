@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TypeSafe · Jev — Decisions, not text | A $0.0003 gate in front of GPT‑5.6, Claude Opus 5, Gemini 3.1, Qwen3.8, Kimi K2.6 & DeepSeek V4</title>
+<title>TypeSafe · Jev | System One Structured Decision Model</title>
+<meta name="description" content="A $0.0003 decision gate in front of frontier models. Send state and typed questions, get structured probabilities and confidence your code can branch on.">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.2.5/400.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.2.5/500.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.2.5/600.css">
@@ -34,9 +35,8 @@ a{color:var(--cyan);text-decoration:none}
   -webkit-mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,#000 30%,transparent 75%);
   mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,#000 30%,transparent 75%)}
 #progress{position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,var(--cyan),var(--violet));z-index:200;transition:width .1s linear}
-
-nav{position:sticky;top:0;z-index:100;background:rgba(7,11,20,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-.navin{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:20px;padding:0 24px;height:60px}
+nav{position:sticky;top:0;z-index:100;background:rgba(7,11,20,.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.navin{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:20px;padding:0 24px;height:60px;position:relative}
 .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:16px;letter-spacing:-.02em;color:#fff;white-space:nowrap}
 .logo .mark{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--cyan),var(--violet));display:grid;place-items:center;font-family:var(--mono);font-weight:700;font-size:13px;color:#04121a}
 .logo small{font-family:var(--mono);font-weight:500;font-size:10px;color:var(--cyan);border:1px solid rgba(34,211,238,.35);padding:1px 6px;border-radius:99px;margin-left:2px}
@@ -47,6 +47,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(7,11,20,.82);backdrop-filt
 .navlinks a.active{color:var(--cyan);background:rgba(34,211,238,.08)}
 .navcta{font-size:13px;font-weight:600;padding:8px 16px;border-radius:9px;background:linear-gradient(135deg,var(--cyan),#0ea5c4);color:#04121a;white-space:nowrap;transition:.2s}
 .navcta:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.nav-toggle{display:none;background:transparent;border:1px solid var(--line2);color:var(--dim);border-radius:8px;padding:6px 10px;cursor:pointer;font-family:var(--mono);font-size:14px}
 
 main{max-width:1200px;margin:0 auto;padding:0 24px}
 section{padding:84px 0 24px}
@@ -303,6 +304,8 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 footer{border-top:1px solid var(--line);margin-top:60px;padding:34px 24px 44px;text-align:center;color:var(--faint);font-size:12.5px}
 footer .fl{font-family:var(--mono);font-size:11.5px;margin-top:8px;max-width:920px;margin-left:auto;margin-right:auto}
 
+@keyframes fadein{to{opacity:1}}
+
 @media(max-width:1020px){
   .pg-body{grid-template-columns:1fr}
   .pg-left{border-right:none;border-bottom:1px solid var(--line)}
@@ -310,8 +313,8 @@ footer .fl{font-family:var(--mono);font-size:11.5px;margin-top:8px;max-width:920
   .split{grid-template-columns:1fr}
   .calc{grid-template-columns:1fr}
   .hidden-costs{grid-template-columns:repeat(2,1fr)}
-  .ct-row{grid-template-columns:190px 1fr 130px;}.ct-lat{display:none}
-  .th-row{grid-template-columns:140px 1fr;}
+  .ct-row{grid-template-columns:190px 1fr 130px}.ct-lat{display:none}
+  .th-row{grid-template-columns:140px 1fr}
   .th-act{grid-column:1/-1}
 }
 @media(max-width:680px){
@@ -320,9 +323,13 @@ footer .fl{font-family:var(--mono);font-size:11.5px;margin-top:8px;max-width:920
   .vs{flex-direction:row;padding:14px 0;flex-wrap:wrap}
   .hstat{border-right:none;border-bottom:1px solid var(--line)}
   .farrow{transform:rotate(90deg);min-width:80px;padding:18px 0}
+  .fnode{margin:0 auto;width:100%;max-width:100%}
   .ct-row{grid-template-columns:1fr 110px}
   .ct-bar{display:none}
-  .navlinks{display:none}
+  .nav-toggle{display:block;margin-left:auto}
+  .navlinks{display:none;position:absolute;top:60px;left:0;right:0;background:rgba(7,11,20,.97);border-bottom:1px solid var(--line);flex-direction:column;padding:16px 24px;gap:6px}
+  .navlinks.open{display:flex}
+  .navcta{display:none}
   .pbar{grid-template-columns:96px 1fr 42px}
   .rd-split{margin-left:0;margin-top:18px}
 }
@@ -330,11 +337,11 @@ footer .fl{font-family:var(--mono);font-size:11.5px;margin-top:8px;max-width:920
 </head>
 <body>
 <div class="bgfx"></div><div class="bggrid"></div><div id="progress"></div>
-
 <nav>
   <div class="navin">
     <div class="logo"><span class="mark">TS</span>TypeSafe <small>jev-1</small></div>
-    <div class="navlinks">
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">Menu</button>
+    <div class="navlinks" id="navLinks">
       <a href="#how">How it works</a>
       <a href="#primitives">Primitives</a>
       <a href="#quickstart">Quickstart</a>
@@ -348,7 +355,6 @@ footer .fl{font-family:var(--mono);font-size:11.5px;margin-top:8px;max-width:920
     <a class="navcta" href="#playground">Try the demo →</a>
   </div>
 </nav>
-
 <header>
   <div class="badge"><span class="dot"></span>System One model · decisions, not text · model pricing verified Sep 21, 2026</div>
   <h1>Stop parsing prose.<br>Start branching on <span class="grad">typed answers</span>.</h1>
@@ -357,14 +363,12 @@ footer .fl{font-family:var(--mono);font-size:11.5px;margin-top:8px;max-width:920
     <a class="btn btn-p" href="#playground">▶ Run the live simulator</a>
     <a class="btn btn-g" href="#cost">See the cost math</a>
   </div>
-
   <div class="hero-stats">
     <div class="hstat"><div class="v"><span data-count="3">0</span> questions</div><div class="k">per call · evaluated in parallel</div></div>
     <div class="hstat"><div class="v">~<span data-count="172">0</span> ms</div><div class="k">median latency vs ~2.5 s for text LLMs</div></div>
     <div class="hstat"><div class="v"><span data-count="0">0</span> parsers</div><div class="k">no JSON extraction, no retries, no schema drift</div></div>
     <div class="hstat"><div class="v">~<span data-count="97">0</span>%</div><div class="k">cheaper than a Claude Opus 5 decision loop</div></div>
   </div>
-
   <div class="flow">
     <div class="fnode"><div class="ft">input · one request</div><div class="fb">state + typed questions <span style="color:var(--faint)">(Choice · Score · Noul)</span></div></div>
     <div class="farrow"><div class="lbl">one request</div><div class="ln"></div></div>
@@ -374,9 +378,8 @@ footer .fl{font-family:var(--mono);font-size:11.5px;margin-top:8px;max-width:920
     <div class="farrow"><div class="lbl">your code</div><div class="ln"></div></div>
     <div class="fnode code"><div class="ft" style="color:var(--green)">deterministic</div><div class="fb"><b>branch · sort · route</b> — if / else on real values</div></div>
   </div>
-
   <div class="modelchips">
-    <div class="mc-t">Jev sits in front of every model in the September 2026 stack</div>
+    <div class="mc-t">Jev sits in front of every model in the stack</div>
     <div class="chips">
       <span class="chip"><i style="background:#10a37f"></i>GPT‑5.6 Sol <span class="p">$4/$20</span></span>
       <span class="chip"><i style="background:#d97757"></i>Claude Opus 5 <span class="p">$5/$25</span></span>
@@ -388,51 +391,47 @@ footer .fl{font-family:var(--mono);font-size:11.5px;margin-top:8px;max-width:920
     </div>
   </div>
 </header>
-
 <main>
-
-<!-- ============ HOW ============ -->
-<section id="how" class="reveal">
-  <div class="kicker">The mismatch</div>
-  <h2>LLMs write text for humans. Your code needs decisions.</h2>
-  <p class="lead">Every "classification" you run through a chat model is really a text-generation task you then coerce, parse, validate and retry back into a value. TypeSafe flips it: Jev is trained to output <b style="color:var(--tx)">calibrated decisions</b> — typed values with probability distributions — not sentences. That's the whole idea of a <b style="color:var(--tx)">System One</b> model: fast, structured judgment software can consume directly.</p>
-
-  <div class="grid2">
-    <div class="card" style="border-color:rgba(248,113,113,.25)">
-      <h3><span class="tagline tg-bad">Today · text LLM</span> Prompt → prose → parse → pray</h3>
-      <ul class="steps bad">
-        <li><span class="n">1</span><span><b>Write a prompt</b> asking GPT‑5.6 / Opus 5 / Gemini 3.1 / Qwen3.8 / Kimi / DeepSeek to "respond with strict JSON".</span></li>
-        <li><span class="n">2</span><span><b>Pay for tokens</b> — including prose, apologies, markdown fences and reasoning you never wanted. Output tokens are the expensive side ($3.75–$50 / 1M).</span></li>
-        <li><span class="n">3</span><span><b>Parse &amp; validate</b> — <code>json.loads</code>, schema checks, enum guards, type coercion.</span></li>
-        <li><span class="n">4</span><span><b>Handle failures</b> — ~5–10% of calls need retries or a repair prompt. 2× tokens, 2× latency.</span></li>
-        <li><span class="n">5</span><span><b>Trust a single value</b> — <code>"urgency": 4</code> arrives with no probability, no confidence, nothing to route on.</span></li>
-      </ul>
+  <!-- ============ HOW ============ -->
+  <section id="how" class="reveal">
+    <div class="kicker">The mismatch</div>
+    <h2>LLMs write text for humans. Your code needs decisions.</h2>
+    <p class="lead">Every "classification" you run through a chat model is really a text-generation task you then coerce, parse, validate and retry back into a value. TypeSafe flips it: Jev is trained to output <b style="color:var(--tx)">calibrated decisions</b> — typed values with probability distributions — not sentences. That's the whole idea of a <b style="color:var(--tx)">System One</b> model: fast, structured judgment software can consume directly.</p>
+    <div class="grid2">
+      <div class="card" style="border-color:rgba(248,113,113,.25)">
+        <h3><span class="tagline tg-bad">Today · text LLM</span> Prompt → prose → parse → pray</h3>
+        <ul class="steps bad">
+          <li><span class="n">1</span><span><b>Write a prompt</b> asking GPT‑5.6 / Opus 5 / Gemini 3.1 / Qwen3.8 / Kimi / DeepSeek to "respond with strict JSON".</span></li>
+          <li><span class="n">2</span><span><b>Pay for tokens</b> — including prose, apologies, markdown fences and reasoning you never wanted. Output tokens are the expensive side ($3.75–$50 / 1M).</span></li>
+          <li><span class="n">3</span><span><b>Parse &amp; validate</b> — <code>json.loads</code>, schema checks, enum guards, type coercion.</span></li>
+          <li><span class="n">4</span><span><b>Handle failures</b> — ~5–10% of calls need retries or a repair prompt. 2× tokens, 2× latency.</span></li>
+          <li><span class="n">5</span><span><b>Trust a single value</b> — <code>"urgency": 4</code> arrives with no probability, no confidence, nothing to route on.</span></li>
+        </ul>
+      </div>
+      <div class="card" style="border-color:rgba(52,211,153,.3)">
+        <h3><span class="tagline tg-good">System One · Jev</span> Questions → typed answers → code</h3>
+        <ul class="steps good">
+          <li><span class="n">1</span><span><b>Declare typed questions</b> — Choice, Score, Noul — against a state object. No prompt engineering.</span></li>
+          <li><span class="n">2</span><span><b>One call, parallel evaluation</b> — every question judged independently against the same state. Adding questions barely moves latency.</span></li>
+          <li><span class="n">3</span><span><b>Structured results, guaranteed</b> — the answer <i>is</i> the schema. Nothing to parse, nothing to repair.</span></li>
+          <li><span class="n">4</span><span><b>Probabilities + confidence</b> — <code>0.61 / 0.24 / 0.09 / 0.06</code> and <code>confidence: 0.82</code> you can branch, sort and escalate on.</span></li>
+          <li><span class="n">5</span><span><b>~172 ms median</b> — fast enough to sit inline in front of every other model in your stack.</span></li>
+        </ul>
+      </div>
     </div>
-    <div class="card" style="border-color:rgba(52,211,153,.3)">
-      <h3><span class="tagline tg-good">System One · Jev</span> Questions → typed answers → code</h3>
-      <ul class="steps good">
-        <li><span class="n">1</span><span><b>Declare typed questions</b> — Choice, Score, Noul — against a state object. No prompt engineering.</span></li>
-        <li><span class="n">2</span><span><b>One call, parallel evaluation</b> — every question judged independently against the same state. Adding questions barely moves latency.</span></li>
-        <li><span class="n">3</span><span><b>Structured results, guaranteed</b> — the answer <i>is</i> the schema. Nothing to parse, nothing to repair.</span></li>
-        <li><span class="n">4</span><span><b>Probabilities + confidence</b> — <code>0.61 / 0.24 / 0.09 / 0.06</code> and <code>confidence: 0.82</code> you can branch, sort and escalate on.</span></li>
-        <li><span class="n">5</span><span><b>~172 ms median</b> — fast enough to sit inline in front of every other model in your stack.</span></li>
-      </ul>
-    </div>
-  </div>
-</section>
+  </section>
 
-<!-- ============ PRIMITIVES ============ -->
-<section id="primitives" class="reveal">
-  <div class="kicker">Three AI primitives</div>
-  <h2>Modular, composable, structured, reliable, fast.</h2>
-  <p class="lead">All three question types can be mixed in a single API call. Each is evaluated in parallel and in isolation — so adding more questions never creates context rot. Keep each question atomic (a "gut-check" a knowledgeable human could make in seconds), then compose the judgment <b style="color:var(--tx)">in your code</b>, with weights you control.</p>
-
-  <div class="grid3">
-    <div class="card prim pc">
-      <h3>Choice</h3><div class="ptype">pick one option from a list</div>
-      <p>"What is the primary intent of this ticket?" → returns the selected option, a probability for <i>every</i> option, and confidence.</p>
-      <div class="returns"><span class="ret">choice</span><span class="ret">probabilities{}</span><span class="ret">confidence</span></div>
-      <div class="codeblock" style="margin-top:16px"><pre class="code">{
+  <!-- ============ PRIMITIVES ============ -->
+  <section id="primitives" class="reveal">
+    <div class="kicker">Three AI primitives</div>
+    <h2>Modular, composable, structured, reliable, fast.</h2>
+    <p class="lead">All three question types can be mixed in a single API call. Each is evaluated in parallel and in isolation — so adding more questions never creates context rot. Keep each question atomic (a "gut-check" a knowledgeable human could make in seconds), then compose the judgment <b style="color:var(--tx)">in your code</b>, with weights you control.</p>
+    <div class="grid3">
+      <div class="card prim pc">
+        <h3>Choice</h3><div class="ptype">pick one option from a list</div>
+        <p>"What is the primary intent of this ticket?" → returns the selected option, a probability for <i>every</i> option, and confidence.</p>
+        <div class="returns"><span class="ret">choice</span><span class="ret">probabilities{}</span><span class="ret">confidence</span></div>
+        <div class="codeblock" style="margin-top:16px"><pre class="code">{
   "choice": "billing",
   "probabilities": {
     "billing": 0.61, "churn_risk": 0.24,
@@ -440,12 +439,12 @@ footer .fl{font-family:var(--mono);font-size:11.5px;margin-top:8px;max-width:920
   },
   "confidence": 0.82
 }</pre></div>
-    </div>
-    <div class="card prim ps">
-      <h3>Score</h3><div class="ptype">rate the state on an ordered rubric</div>
-      <p>"How urgent is this ticket?" with descriptive levels → returns the score, the full distribution over levels, and confidence.</p>
-      <div class="returns"><span class="ret">score</span><span class="ret">probabilities{}</span><span class="ret">confidence</span></div>
-      <div class="codeblock" style="margin-top:16px"><pre class="code">{
+      </div>
+      <div class="card prim ps">
+        <h3>Score</h3><div class="ptype">rate the state on an ordered rubric</div>
+        <p>"How urgent is this ticket?" with descriptive levels → returns the score, the full distribution over levels, and confidence.</p>
+        <div class="returns"><span class="ret">score</span><span class="ret">probabilities{}</span><span class="ret">confidence</span></div>
+        <div class="codeblock" style="margin-top:16px"><pre class="code">{
   "score": 4,
   "probabilities": {
     "1": 0.01, "2": 0.06, "3": 0.25,
@@ -453,45 +452,41 @@ footer .fl{font-family:var(--mono);font-size:11.5px;margin-top:8px;max-width:920
   },
   "confidence": 0.74
 }</pre></div>
-    </div>
-    <div class="card prim pn">
-      <h3>Noul</h3><div class="ptype">is this statement true? → 0–1</div>
-      <p>"Does this ticket contain PII?" → returns the probability that the answer is yes. The perfect cheap boolean gate in front of expensive logic.</p>
-      <div class="returns"><span class="ret">noul ∈ [0, 1]</span></div>
-      <div class="codeblock" style="margin-top:16px"><pre class="code">{
+      </div>
+      <div class="card prim pn">
+        <h3>Noul</h3><div class="ptype">is this statement true? → 0–1</div>
+        <p>"Does this ticket contain PII?" → returns the probability that the answer is yes. The perfect cheap boolean gate in front of expensive logic.</p>
+        <div class="returns"><span class="ret">noul ∈ [0, 1]</span></div>
+        <div class="codeblock" style="margin-top:16px"><pre class="code">{
   "noul": 0.83
 }
-// if (answer.noul > 0.7) redactPII(ticket);</pre></div>
+// if (answer.noul &gt; 0.7) redactPII(ticket);</pre></div>
+      </div>
     </div>
-  </div>
+    <div class="callout good" style="max-width:920px">
+      <b>Composite scoring:</b> instead of asking a frontier model to "rate this startup pitch" (one blob judgment), ask Jev separately about <b>market size</b>, <b>technical feasibility</b> and <b>differentiation</b> — then combine with your own formula. When priorities shift, change a coefficient in code, not a prompt.
+    </div>
+  </section>
 
-  <div class="callout good" style="max-width:920px">
-    <b>Composite scoring:</b> instead of asking a frontier model to "rate this startup pitch" (one blob judgment), ask Jev separately about <b>market size</b>, <b>technical feasibility</b> and <b>differentiation</b> — then combine with your own formula. When priorities shift, change a coefficient in code, not a prompt.
-  </div>
-</section>
-
-<!-- ============ QUICKSTART ============ -->
-<section id="quickstart" class="reveal">
-  <div class="kicker">Quickstart · Python &amp; JavaScript SDKs</div>
-  <h2>From zero to a typed decision in one call.</h2>
-  <p class="lead">Install the SDK, set your key, send state + questions. Sync and async clients, retries with backoff, typed exceptions and rate-limit handling are built in — no validator layer to write.</p>
-
-  <div class="install">
-    <div class="inst"><span class="pr">$</span> pip install typesafe-ai</div>
-    <div class="inst"><span class="pr">$</span> npm install @typesafe/ai</div>
-    <div class="inst"><span class="pr">$</span> export TYPESAFE_API_KEY=tsk_live_…</div>
-  </div>
-
-  <div class="tabs" id="qsTabs" style="margin-top:26px">
-    <button class="tab on" data-qs="py"><i style="background:#f9c784"></i>Python</button>
-    <button class="tab" data-qs="js"><i style="background:#fbbf24"></i>JavaScript / TypeScript</button>
-  </div>
-
-  <div class="qspanel on" id="qs-py">
-    <div class="codeblock hl"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">quickstart.py — sync, async &amp; retries</span><button class="copybtn">copy</button></div><pre class="code">from typesafe import TypeSafeClient, AsyncTypeSafeClient, RetryPolicy
+  <!-- ============ QUICKSTART ============ -->
+  <section id="quickstart" class="reveal">
+    <div class="kicker">Quickstart · Python &amp; JavaScript SDKs</div>
+    <h2>From zero to a typed decision in one call.</h2>
+    <p class="lead">Install the SDK, set your key, send state + questions. Sync and async clients, retries with backoff, typed exceptions and rate-limit handling are built in — no validator layer to write.</p>
+    <div class="install">
+      <div class="inst"><span class="pr">$</span> pip install typesafe-ai</div>
+      <div class="inst"><span class="pr">$</span> npm install @typesafe/ai</div>
+      <div class="inst"><span class="pr">$</span> export TYPESAFE_API_KEY=tsk_live_…</div>
+    </div>
+    <div class="tabs" id="qsTabs" style="margin-top:26px">
+      <button class="tab on" data-qs="py"><i style="background:#f9c784"></i>Python</button>
+      <button class="tab" data-qs="js"><i style="background:#fbbf24"></i>JavaScript / TypeScript</button>
+    </div>
+    <div class="qspanel on" id="qs-py">
+      <div class="codeblock hl"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">quickstart.py — sync, async &amp; retries</span><button class="copybtn">copy</button></div><pre class="code">from typesafe import TypeSafeClient, AsyncTypeSafeClient, RetryPolicy
 
 client = TypeSafeClient(
-    retry_policy=RetryPolicy(attempts=3, backoff=0.4),   # retryable statuses + backoff headers handled
+    retry_policy=RetryPolicy(attempts=3, backoff=0.4)
 )
 
 resp = client.evaluate(
@@ -508,21 +503,20 @@ resp = client.evaluate(
     ],
 )
 
-intent = resp.answers["intent"]           # typed object
-print(intent.choice, intent.confidence)   # "billing" 0.82
-print(resp.answers["urgency"].score)      # 4
-print(resp.usage)                         # token usage per question
+intent = resp.answers["intent"]
+print(intent.choice, intent.confidence)
+print(resp.answers["urgency"].score)
+print(resp.usage)
 
-models = client.list_models()             # discover available System One models
-
-# async flavor for high-throughput services:
-# aclient = AsyncTypeSafeClient(); await aclient.evaluate(...)
+# Async flavor for high-throughput services
+aclient = AsyncTypeSafeClient()
+# await aclient.evaluate(...)
 </pre></div>
-  </div>
-  <div class="qspanel" id="qs-js">
-    <div class="codeblock hl"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">quickstart.ts — JavaScript SDK</span><button class="copybtn">copy</button></div><pre class="code">import { TypeSafeClient } from "@typesafe/ai";
+    </div>
+    <div class="qspanel" id="qs-js">
+      <div class="codeblock hl"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">quickstart.ts — JavaScript SDK</span><button class="copybtn">copy</button></div><pre class="code">import { TypeSafeClient } from "@typesafe/ai";
 
-const client = new TypeSafeClient();   // reads TYPESAFE_API_KEY
+const client = new TypeSafeClient();
 
 const resp = await client.evaluate({
   state: { ticket },
@@ -538,119 +532,110 @@ const resp = await client.evaluate({
   ],
 });
 
-const intent = resp.answers.intent;         // fully typed (TS types ship with the SDK)
+const intent = resp.answers.intent;
 if (intent.confidence &lt; 0.6) {
   await escalate(ticket, "claude-opus-5");
 } else {
-  routeToQueue(intent.choice, ticket);      // "billing"
+  routeToQueue(intent.choice, ticket);
 }
 </pre></div>
-  </div>
-
-  <div class="modelchips" style="margin-top:34px;padding-top:24px">
-    <div class="mc-t">Everything in the SDK surface</div>
-    <div class="chips">
-      <span class="chip">TypeSafeClient · AsyncTypeSafeClient</span>
-      <span class="chip">RetryPolicy (attempts · backoff · retry headers)</span>
-      <span class="chip">Typed exceptions &amp; rate limits</span>
-      <span class="chip">list_models()</span>
-      <span class="chip">HTTP API reference</span>
-      <span class="chip">Agent skill for Claude Code / Codex</span>
     </div>
-  </div>
-</section>
-
-<!-- ============ PLAYGROUND ============ -->
-<section id="playground" class="reveal">
-  <div class="kicker">Live simulator</div>
-  <h2>Watch a decision happen — both ways.</h2>
-  <p class="lead">Pick a real scenario. Run it through <b style="color:var(--cyan)">Jev</b>, then run the same judgment through a text model (<b style="color:#b79bff">GPT‑5.6 Sol, Claude Opus 5, Gemini 3.1 Pro, Qwen3.8‑Max, Kimi K2.6 or DeepSeek V4</b>) with the exact prompt you'd write in production. Compare latency, cost, retries — and what your code actually receives.</p>
-
-  <div class="pg-wrap">
-    <div class="pg-top">
-      <div class="pg-title"><span class="dot"></span>decision-playground · simulated responses</div>
-      <div class="scen-tabs" id="scenTabs">
-        <button class="scen-tab on" data-scen="triage">🎫 Support triage</button>
-        <button class="scen-tab" data-scen="review">🧑‍💻 PR risk gate</button>
-        <button class="scen-tab" data-scen="lead">📈 Lead qualification</button>
+    <div class="modelchips" style="margin-top:34px;padding-top:24px">
+      <div class="mc-t">Everything in the SDK surface</div>
+      <div class="chips">
+        <span class="chip">TypeSafeClient · AsyncTypeSafeClient</span>
+        <span class="chip">RetryPolicy (attempts · backoff)</span>
+        <span class="chip">Typed exceptions &amp; rate limits</span>
+        <span class="chip">list_models()</span>
+        <span class="chip">HTTP API reference</span>
+        <span class="chip">Agent skill for Claude Code / Codex</span>
       </div>
     </div>
-    <div class="pg-body">
-      <div class="pg-left">
-        <div class="sect-lbl">① state — the context you send</div>
-        <div class="codeblock" style="margin-top:0"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">state.json</span></div><pre class="code" id="pgState"></pre></div>
+  </section>
 
-        <div class="sect-lbl" style="margin-top:20px">② engine</div>
-        <div class="pg-controls">
-          <div class="mode-sw" id="modeSw">
-            <button id="modeJev" class="on-j">⚡ Jev · System One</button>
-            <button id="modeLlm">💬 Text LLM</button>
-          </div>
-          <select class="pgsel" id="pgModel" style="display:none"></select>
-          <button class="runbtn" id="pgRun">▶ Run decision</button>
+  <!-- ============ PLAYGROUND ============ -->
+  <section id="playground" class="reveal">
+    <div class="kicker">Live simulator</div>
+    <h2>Watch a decision happen — both ways.</h2>
+    <p class="lead">Pick a real scenario. Run it through <b style="color:var(--cyan)">Jev</b>, then run the same judgment through a text model (<b style="color:#b79bff">GPT‑5.6 Sol, Claude Opus 5, Gemini 3.1 Pro, Qwen3.8‑Max, Kimi K2.6 or DeepSeek V4</b>) with the exact prompt you'd write in production. Compare latency, cost, retries — and what your code actually receives.</p>
+    <div class="pg-wrap">
+      <div class="pg-top">
+        <div class="pg-title"><span class="dot"></span>decision-playground · simulated responses</div>
+        <div class="scen-tabs" id="scenTabs">
+          <button class="scen-tab on" data-scen="triage">🎫 Support triage</button>
+          <button class="scen-tab" data-scen="review">🧑‍💻 PR risk gate</button>
+          <button class="scen-tab" data-scen="lead">📈 Lead qualification</button>
         </div>
-
-        <div class="sect-lbl" id="reqLbl">③ request — typed questions</div>
-        <div class="codeblock" style="margin-top:0"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname" id="reqFname">POST /v1/evaluate</span></div><pre class="code" id="pgRequest"></pre></div>
       </div>
-      <div class="pg-right">
-        <div class="sect-lbl">④ response — what your code receives</div>
-        <div class="pg-out" id="pgOut">
-          <div style="display:grid;place-items:center;height:380px;color:var(--faint);font-family:var(--mono);font-size:13px;text-align:center">
-            <div>
-              <div style="font-size:40px;margin-bottom:14px">⚡</div>
-              press <b style="color:var(--cyan)">Run decision</b><br>to evaluate the questions against the state
+      <div class="pg-body">
+        <div class="pg-left">
+          <div class="sect-lbl">① state — the context you send</div>
+          <div class="codeblock" style="margin-top:0"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">state.json</span></div><pre class="code" id="pgState"></pre></div>
+          <div class="sect-lbl" style="margin-top:20px">② engine</div>
+          <div class="pg-controls">
+            <div class="mode-sw" id="modeSw">
+              <button id="modeJev" class="on-j">⚡ Jev · System One</button>
+              <button id="modeLlm">💬 Text LLM</button>
+            </div>
+            <select class="pgsel" id="pgModel" style="display:none"></select>
+            <button class="runbtn" id="pgRun">▶ Run decision</button>
+          </div>
+          <div class="sect-lbl" id="reqLbl">③ request — typed questions</div>
+          <div class="codeblock" style="margin-top:0"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname" id="reqFname">POST /v1/evaluate</span></div><pre class="code" id="pgRequest"></pre></div>
+        </div>
+        <div class="pg-right">
+          <div class="sect-lbl">④ response — what your code receives</div>
+          <div class="pg-out" id="pgOut">
+            <div style="display:grid;place-items:center;height:380px;color:var(--faint);font-family:var(--mono);font-size:13px;text-align:center">
+              <div>
+                <div style="font-size:40px;margin-bottom:14px">⚡</div>
+                press <b style="color:var(--cyan)">Run decision</b><br>to evaluate the questions against the state
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ============ PROMPTS ============ -->
-<section id="prompts" class="reveal">
-  <div class="kicker">Real prompts · every major model · Sep 2026</div>
-  <h2>Exactly what "make a decision" costs on each model.</h2>
-  <p class="lead">The same support-triage task, written the way you'd really write it for Jev, Claude Opus 5, GPT‑5.6, Gemini 3.1 Pro, and the open-weight players — Qwen3.8‑Max, Kimi K2.6 and DeepSeek V4. Look at how much <b style="color:var(--tx)">machinery</b> the text models need to arrive at one typed value.</p>
-
-  <div class="tabs" id="promptTabs">
-    <button class="tab on" data-tab="jev"><i style="background:linear-gradient(135deg,var(--cyan),var(--violet))"></i>TypeSafe Jev</button>
-    <button class="tab" data-tab="claude"><i style="background:#d97757"></i>Claude Opus 5</button>
-    <button class="tab" data-tab="gpt"><i style="background:#10a37f"></i>GPT‑5.6</button>
-    <button class="tab" data-tab="gemini"><i style="background:#4285f4"></i>Gemini 3.1 Pro</button>
-    <button class="tab" data-tab="open"><i style="background:#34d399"></i>Qwen · Kimi · DeepSeek</button>
-  </div>
-
-  <div class="tabpanel on" id="tp-jev">
-    <div class="split">
-      <div>
-        <div class="codeblock hl"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">POST https://api.typesafe.ai/v1/evaluate</span><button class="copybtn">copy</button></div><pre class="code">{
+  <!-- ============ PROMPTS ============ -->
+  <section id="prompts" class="reveal">
+    <div class="kicker">Real prompts · every major model</div>
+    <h2>Exactly what "make a decision" costs on each model.</h2>
+    <p class="lead">The same support-triage task, written the way you'd really write it for Jev, Claude Opus 5, GPT‑5.6, Gemini 3.1 Pro, and open-weight models. Look at how much <b style="color:var(--tx)">machinery</b> the text models need to arrive at one typed value.</p>
+    <div class="tabs" id="promptTabs">
+      <button class="tab on" data-tab="jev"><i style="background:linear-gradient(135deg,var(--cyan),var(--violet))"></i>TypeSafe Jev</button>
+      <button class="tab" data-tab="claude"><i style="background:#d97757"></i>Claude Opus 5</button>
+      <button class="tab" data-tab="gpt"><i style="background:#10a37f"></i>GPT‑5.6</button>
+      <button class="tab" data-tab="gemini"><i style="background:#4285f4"></i>Gemini 3.1 Pro</button>
+      <button class="tab" data-tab="open"><i style="background:#34d399"></i>Qwen · Kimi · DeepSeek</button>
+    </div>
+    <div class="tabpanel on" id="tp-jev">
+      <div class="split">
+        <div>
+          <div class="codeblock hl"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">POST https://api.typesafe.ai/v1/evaluate</span><button class="copybtn">copy</button></div><pre class="code">{
   "model": "jev-1",
   "state": {
     "ticket": {
       "subject": "Charged twice for March — need refund",
-      "body": "We were billed $4,800 twice on Mar 3 for invoice
-               #INV-2291. CFO flagged it; we may pause renewal.",
+      "body": "We were billed $4,800 twice on Mar 3 for invoice #INV-2291. CFO flagged it; we may pause renewal.",
       "customer_tier": "enterprise"
     }
   },
   "questions": [
     { "id": "intent", "type": "choice",
       "question": "Primary intent of this ticket?",
-      "options": ["billing", "bug_report",
-                  "feature_request", "churn_risk"] },
+      "options": ["billing", "bug_report", "feature_request", "churn_risk"] },
     { "id": "urgency", "type": "score",
       "question": "How urgent is this ticket?",
-      "levels": ["1 — can wait", "2 — this week", "3 — today",
-                 "4 — hours", "5 — drop everything"] },
+      "levels": ["1 — can wait", "2 — this week", "3 — today", "4 — hours", "5 — drop everything"] },
     { "id": "contains_pii", "type": "noul",
       "question": "Does this ticket contain PII?" }
   ]
 }</pre></div>
-      </div>
-      <div>
-        <div class="codeblock hl"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">response · 172 ms</span><button class="copybtn">copy</button></div><pre class="code">{
+        </div>
+        <div>
+          <div class="codeblock hl"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">response · 172 ms</span><button class="copybtn">copy</button></div><pre class="code">{
   "answers": [
     { "id": "intent", "type": "choice", "choice": "billing",
       "probabilities": { "billing": 0.61, "churn_risk": 0.24,
@@ -664,10 +649,10 @@ if (intent.confidence &lt; 0.6) {
   ],
   "latency_ms": 172
 }</pre></div>
-        <div class="callout good"><b>Zero glue code.</b> The response <i>is</i> the schema — typed values, full distributions, calibrated confidence. Nothing to parse, repair or re-roll.</div>
+          <div class="callout good"><b>Zero glue code.</b> The response <i>is</i> the schema — typed values, full distributions, calibrated confidence. Nothing to parse, repair or re-roll.</div>
+        </div>
       </div>
-    </div>
-    <div class="codeblock" style="margin-top:20px"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">triage.py · TypeSafe Python SDK</span><button class="copybtn">copy</button></div><pre class="code">from typesafe import TypeSafeClient
+      <div class="codeblock" style="margin-top:20px"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">triage.py · TypeSafe Python SDK</span><button class="copybtn">copy</button></div><pre class="code">from typesafe import TypeSafeClient
 
 client = TypeSafeClient()
 
@@ -685,9 +670,9 @@ resp = client.evaluate(
     ],
 )
 
-intent = resp.answers["intent"]          # typed object — not a string to regex apart
+intent = resp.answers["intent"]
 
-if intent.confidence &lt; 0.6:               # not sure? escalate to a frontier model or human
+if intent.confidence &lt; 0.6:
     escalate(ticket, to="claude-opus-5")
 elif resp.answers["urgency"].score &gt;= 4:
     page_oncall(ticket)
@@ -697,11 +682,10 @@ else:
 if resp.answers["contains_pii"].noul &gt; 0.7:
     ticket = redact(ticket)
 </pre></div>
-  </div>
+    </div>
 
-  <div class="tabpanel" id="tp-claude">
-    <div class="codeblock"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">claude_triage.py · Anthropic SDK — the real prompt · Opus 5 $5/$25 per 1M tokens</span><button class="copybtn">copy</button></div><pre class="code">import anthropic, json
-
+    <div class="tabpanel" id="tp-claude">
+      <div class="codeblock"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">claude_triage.py · Anthropic SDK · Opus 5 ($5/$25 per 1M tokens)</span><button class="copybtn">copy</button></div><pre class="code">import anthropic, json
 client = anthropic.Anthropic()
 
 SYSTEM = """You are a strict ticket classifier. Read the state and answer every question.
@@ -711,12 +695,12 @@ Respond ONLY with a JSON object of exactly this shape:
 No prose. No markdown fences. No explanations. If uncertain, still pick the most likely value."""
 
 msg = client.messages.create(
-    model="claude-opus-5",               # Sep 2026 flagship; Fable 5.1 ($10/$50) is pricier still
+    model="claude-opus-5",
     max_tokens=300,
     system=SYSTEM,
     messages=[
         {"role": "user", "content": f"State:\n{json.dumps(state, indent=2)}\n\nAnswer:"},
-        {"role": "assistant", "content": "{"},   # prefill trick: force the model to continue the JSON object
+        {"role": "assistant", "content": "{"},
     ],
 )
 
@@ -728,14 +712,13 @@ try:
     assert isinstance(data["urgency"], int) and 1 &lt;= data["urgency"] &lt;= 5
     assert isinstance(data["contains_pii"], bool)
 except (json.JSONDecodeError, KeyError, AssertionError):
-    # ~5-8% of calls land here: repair prompt = 2x tokens, +3s latency, still not guaranteed
     data = retry_with_repair_prompt(raw)
 </pre></div>
-    <div class="callout"><b>What you don't get:</b> <code style="color:var(--amber)">"urgency": 4</code> arrives as a bare value — no probability distribution, no confidence to gate on. Opus 5 is a reasoning powerhouse; here you're paying $25/1M output tokens to use it as an enum picker, at ~3 s per call, plus the validation and retry machinery above. ≈ <b>$97 per 10k decisions</b>.</div>
-  </div>
+      <div class="callout"><b>What you don't get:</b> <code style="color:var(--amber)">"urgency": 4</code> arrives as a bare value without probability distributions or confidence scores to gate on.</div>
+    </div>
 
-  <div class="tabpanel" id="tp-gpt">
-    <div class="codeblock"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">gpt_triage.py · OpenAI SDK — structured outputs · GPT‑5.6 Sol $4/$20 · Luna $0.20/$1.20</span><button class="copybtn">copy</button></div><pre class="code">from typing import Literal
+    <div class="tabpanel" id="tp-gpt">
+      <div class="codeblock"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">gpt_triage.py · OpenAI SDK Structured Outputs</span><button class="copybtn">copy</button></div><pre class="code">from typing import Literal
 from openai import OpenAI
 from pydantic import BaseModel
 
@@ -743,33 +726,25 @@ client = OpenAI()
 
 class TicketDecision(BaseModel):
     intent: Literal["billing", "bug_report", "feature_request", "churn_risk"]
-    urgency: int            # 1-5
+    urgency: int
     contains_pii: bool
 
 resp = client.chat.completions.parse(
-    model="gpt-5.6-sol",        # or gpt-5.6-luna ($0.20/$1.20) to cut the bill ~18x
+    model="gpt-5.6-sol",
     messages=[
-        {"role": "system", "content":
-            "You are a strict ticket classifier. Fill the schema using only the state provided. "
-            "urgency: 1=can wait, 2=this week, 3=today, 4=hours, 5=drop everything. "
-            "contains_pii: true if names, emails, payment or government identifiers appear."},
+        {"role": "system", "content": "Classify the ticket according to the defined schema."},
         {"role": "user", "content": state_json},
     ],
     response_format=TicketDecision,
 )
 
-d = resp.choices[0].message.parsed   # schema-valid ✓
-
-# ...but note what is missing:
-#   d.urgency == 4          # why not 3? why not 5? no distribution.
-#   no confidence field     # nothing to route or escalate on.
-#   ~2.5 s + per-token bill # for three enum/bool/int values.
+d = resp.choices[0].message.parsed
 </pre></div>
-    <div class="callout"><b>Structured outputs fixed the schema — not the economics.</b> Sol ≈ <b>$78 / 10k decisions</b>; even budget-tier Luna is ≈ $4.3 / 10k and still ~0.9 s per call with zero calibrated confidence. You keep paying generation tokens and generation latency for what is fundamentally a classification.</div>
-  </div>
+      <div class="callout"><b>Structured outputs fix the schema, not the economics:</b> You continue paying text-generation rates and latency for what is fundamentally an internal classification.</div>
+    </div>
 
-  <div class="tabpanel" id="tp-gemini">
-    <div class="codeblock"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">gemini_triage.py · Google Gen AI SDK — responseSchema · Gemini 3.1 Pro $2/$12 · 3.8 Flash $0.75/$3.75</span><button class="copybtn">copy</button></div><pre class="code">import json
+    <div class="tabpanel" id="tp-gemini">
+      <div class="codeblock"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">gemini_triage.py · Google Gen AI SDK responseSchema</span><button class="copybtn">copy</button></div><pre class="code">import json
 from google import genai
 
 client = genai.Client()
@@ -777,8 +752,7 @@ client = genai.Client()
 schema = {
   "type": "OBJECT",
   "properties": {
-    "intent": {"type": "STRING",
-               "enum": ["billing", "bug_report", "feature_request", "churn_risk"]},
+    "intent": {"type": "STRING", "enum": ["billing", "bug_report", "feature_request", "churn_risk"]},
     "urgency": {"type": "INTEGER", "minimum": 1, "maximum": 5},
     "contains_pii": {"type": "BOOLEAN"},
   },
@@ -786,7 +760,7 @@ schema = {
 }
 
 resp = client.models.generate_content(
-    model="gemini-3.1-pro",       # or gemini-3.8-flash for ~3x less
+    model="gemini-3.1-pro",
     contents=f"State:\n{state_json}\n\nClassify the ticket against the schema.",
     config={
         "system_instruction": "You are a strict ticket classifier. Answer only via the schema.",
@@ -797,15 +771,11 @@ resp = client.models.generate_content(
 )
 
 data = json.loads(resp.text)
-# Schema enforced by the API ✓ — but again: one value per question,
-# no probabilities, no confidence, generation-speed latency,
-# and every thinking-token Gemini spends is on your invoice.
 </pre></div>
-    <div class="callout"><b>Same shape, same gaps.</b> Gemini 3.1 Pro ≈ <b>$43 / 10k decisions</b>, 3.8 Flash ≈ $14.6 / 10k. Flash is fast and cheap for a frontier model — which is exactly why teams discover that a dedicated <i>decision</i> primitive is cheaper and faster still, and returns the uncertainty their code actually needs.</div>
-  </div>
+    </div>
 
-  <div class="tabpanel" id="tp-open">
-    <div class="codeblock"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">open_models_triage.py · Qwen3.8-Max $2/$6 · Kimi K2.6 $0.60/$2.50 · DeepSeek V4 Flash $0.14/$0.28 off-peak</span><button class="copybtn">copy</button></div><pre class="code">import json
+    <div class="tabpanel" id="tp-open">
+      <div class="codeblock"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">open_models_triage.py · Open-Weight Inference APIs</span><button class="copybtn">copy</button></div><pre class="code">import json
 from openai import OpenAI
 from pydantic import BaseModel, ValidationError
 from typing import Literal
@@ -815,82 +785,74 @@ class TicketDecision(BaseModel):
     urgency: int
     contains_pii: bool
 
-# DeepSeek: https://api.deepseek.com/v1   ·   Qwen: dashscope   ·   Kimi: api.moonshot.ai
-client = OpenAI(base_url=BASE_URL, api_key=KEY)
-
-SYSTEM = ("You are a strict ticket classifier. Reply with JSON only: "
-          '{"intent": "billing|bug_report|feature_request|churn_risk", '
-          '"urgency": 1-5, "contains_pii": true|false}. No other text.')
+client = OpenAI(base_url="https://api.deepseek.com/v1", api_key="KEY")
 
 def decide(state_json, attempts=3):
     for attempt in range(attempts):
         r = client.chat.completions.create(
-            model=MODEL,                     # "deepseek-v4-flash" | "qwen3.8-max" | "kimi-k2.6"
-            messages=[{"role": "system", "content": SYSTEM},
-                      {"role": "user", "content": state_json}],
+            model="deepseek-v4-flash",
+            messages=[
+                {"role": "system", "content": "Reply strictly in JSON."},
+                {"role": "user", "content": state_json}
+            ],
             response_format={"type": "json_object"},
             temperature=0.0,
         )
         try:
             return TicketDecision.model_validate_json(r.choices[0].message.content)
         except (ValidationError, json.JSONDecodeError):
-            continue                          # every retry re-bills all tokens
-    raise RuntimeError("model could not produce a valid decision")
+            continue
+    raise RuntimeError("Model could not produce a valid decision")
 </pre></div>
-    <div class="callout"><b>The cheapest tokens of 2026 — and still a text pipeline.</b> DeepSeek V4 Flash ≈ <b>$1.9 / 10k</b> off-peak (peak pricing roughly doubles it), Kimi K2.6 ≈ $10.7, Qwen3.8‑Max ≈ $31. But you're still running a generation service as a decision engine: retry loops, validation code you own forever, p95 tail latency in the seconds, self-hosting GPUs if you go open-weights — and zero calibrated confidence for safe auto-escalation. Jev costs a similar order of magnitude as DeepSeek, answers in ~172 ms, and <i>cannot</i> return an unparseable decision.</div>
-  </div>
-
-  <div class="hidden-costs">
-    <div class="hcost"><b>Prose tokens on the invoice</b>Reasoning text, markdown fences, apologies and restatements you never asked for — all billed at output rates ($3.75–$50 / 1M).</div>
-    <div class="hcost"><b>Retry &amp; repair loops</b>~5–10% of calls fail schema/enum validation → second call, double tokens, doubled tail latency.</div>
-    <div class="hcost"><b>Validation engineering</b>Pydantic models, JSON extractors, enum guards, fallback branches — weeks of glue you maintain forever.</div>
-    <div class="hcost"><b>Tail latency</b>p95 of 3–6 s per decision makes text LLMs unusable inline (search ranking, fraud gates, real-time routing).</div>
-    <div class="hcost"><b>No calibrated uncertainty</b>One value, no distribution, no confidence → you can't tell "sure" from "coin flip", so you can't route safely.</div>
-    <div class="hcost"><b>Prompt &amp; model drift</b>Providers ship point releases constantly (5.5 → 5.6 → 6); your carefully-tuned "strict JSON" prompt quietly changes behavior.</div>
-  </div>
-</section>
-
-<!-- ============ COST ============ -->
-<section id="cost" class="reveal">
-  <div class="kicker">The cost math · September 21, 2026</div>
-  <h2>Cost per 10,000 decisions.</h2>
-  <p class="lead">One decision = the triage task above (3 questions; for text models ≈ 900 input / 180 output tokens of state + schema + instructions, incl. an 8% retry overhead). Jev bills per <b style="color:var(--tx)">question evaluated</b> — not per token of generated prose.</p>
-
-  <div class="cost-table" id="costTable">
-    <div class="ct-row ct-head"><div>Engine</div><div>Cost per 10k decisions</div><div style="text-align:right">Total</div><div style="text-align:right">Latency (med.)</div></div>
-  </div>
-  <p class="note">Public API pricing verified Sep 21, 2026 ($/1M in/out): GPT‑5.6 Sol $4/$20 · GPT‑5.6 Luna $0.20/$1.20 · Claude Opus 5 $5/$25 (Fable 5.1: $10/$50) · Gemini 3.1 Pro $2/$12 · Gemini 3.8 Flash $0.75/$3.75 · Qwen3.8‑Max $2/$6 · Kimi K2.6 $0.60/$2.50 · DeepSeek V4 Flash $0.14/$0.28 off-peak (peak $0.30/$1.20 ≈ $5.25/10k). Jev shown at an illustrative $0.09 / 1k questions × 3 questions. Self-hosted open weights additionally carry GPU infra, serving ops and validation-engineering costs not shown.</p>
-</section>
-
-<!-- ============ CONFIDENCE ============ -->
-<section id="confidence" class="reveal">
-  <div class="kicker">Confidence &amp; state</div>
-  <h2>Confidence: the second axis your code has been missing.</h2>
-  <p class="lead">Probability tells you <b style="color:var(--tx)">what</b> the model chose and how the remaining mass is spread. Confidence tells you <b style="color:var(--tx)">how strongly the model stands behind the answer</b> — the signal that decides whether your system should act automatically, act with an audit trail, or escalate.</p>
-
-  <div class="grid2">
-    <div class="card prim pc">
-      <h3>Probability</h3><div class="ptype">distribution over the options</div>
-      <p>"billing 0.61 · churn_risk 0.24" — useful for <b>sorting</b> queues, weighing composite scores, and detecting close calls between two options.</p>
     </div>
-    <div class="card prim pn">
-      <h3>Confidence</h3><div class="ptype">how sure the model is · 0–1</div>
-      <p>"confidence 0.82" — useful for <b>gating</b>: act, sample-audit, or escalate. Choice and Score return it directly; Noul's probability is itself the gate.</p>
+
+    <div class="hidden-costs">
+      <div class="hcost"><b>Prose tokens on the invoice</b>Reasoning text, markdown fences, and apologies all billed at output rates.</div>
+      <div class="hcost"><b>Retry &amp; repair loops</b>5–10% of calls fail schema or enum validation, triggering duplicate requests and higher tail latency.</div>
+      <div class="hcost"><b>Validation engineering</b>Pydantic models, JSON cleaners, and fallback branches you have to build and maintain.</div>
+      <div class="hcost"><b>Tail latency</b>Multi-second p95 latencies make text models slow for inline routing.</div>
+      <div class="hcost"><b>No calibrated uncertainty</b>Single output values do not tell you if the model was certain or guessing.</div>
+      <div class="hcost"><b>Prompt &amp; model drift</b>Minor upstream model updates can unexpectedly break brittle JSON system prompts.</div>
     </div>
-  </div>
+  </section>
 
-  <div class="thresh">
-    <div class="th-row th-head"><div>Confidence</div><div>What your system should do</div><div>Code</div></div>
-    <div class="th-row"><div class="th-range" style="color:var(--green)">≥ 0.85</div><div><b>Act automatically.</b> Route, tag, approve — fully deterministic path, no human, no frontier model.</div><div class="th-act"><code>act(answer)</code></div></div>
-    <div class="th-row"><div class="th-range" style="color:var(--amber)">0.60 – 0.84</div><div><b>Act + audit.</b> Proceed, but sample a percentage into a review queue; track drift over time.</div><div class="th-act"><code>act(answer); audit(sample=0.1)</code></div></div>
-    <div class="th-row"><div class="th-range" style="color:var(--blue)">0.30 – 0.59</div><div><b>Escalate to a frontier model.</b> Send the state to GPT‑5.6 / Opus 5 / Gemini 3.1 for deep reasoning — only now.</div><div class="th-act"><code>escalate(state, "claude-opus-5")</code></div></div>
-    <div class="th-row"><div class="th-range" style="color:var(--red)">&lt; 0.30</div><div><b>Stop. Ask a human</b> — or re-ask as smaller, better-scoped questions with clearer instructions.</div><div class="th-act"><code>queue_for_human(state)</code></div></div>
-  </div>
+  <!-- ============ COST ============ -->
+  <section id="cost" class="reveal">
+    <div class="kicker">The cost math</div>
+    <h2>Cost per 10,000 decisions.</h2>
+    <p class="lead">One decision = the triage task above (3 questions; for text models ≈ 900 input / 180 output tokens of state + schema + instructions, incl. an 8% retry overhead). Jev bills per <b style="color:var(--tx)">question evaluated</b> — not per token of generated prose.</p>
+    <div class="cost-table" id="costTable">
+      <div class="ct-row ct-head"><div>Engine</div><div>Cost per 10k decisions</div><div style="text-align:right">Total</div><div style="text-align:right">Latency (med.)</div></div>
+    </div>
+    <p class="note">Public API pricing comparison based on published rates ($/1M in/out): GPT‑5.6 Sol $4/$20 · GPT‑5.6 Luna $0.20/$1.20 · Claude Opus 5 $5/$25 · Gemini 3.1 Pro $2/$12 · Gemini 3.8 Flash $0.75/$3.75 · Qwen3.8‑Max $2/$6 · Kimi K2.6 $0.60/$2.50 · DeepSeek V4 Flash $0.14/$0.28. Jev calculated at $0.09 / 1k questions evaluated.</p>
+  </section>
 
-  <div class="split" style="margin-top:26px">
-    <div>
-      <div class="sect-lbl" style="margin-top:6px">Architectural rule of thumb</div>
-      <div class="codeblock" style="margin-top:8px"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">gating.py — confidence × risk</span><button class="copybtn">copy</button></div><pre class="code">def threshold_for(risk: str) -> float:
+  <!-- ============ CONFIDENCE ============ -->
+  <section id="confidence" class="reveal">
+    <div class="kicker">Confidence &amp; state</div>
+    <h2>Confidence: the second axis your code has been missing.</h2>
+    <p class="lead">Probability tells you <b style="color:var(--tx)">what</b> the model chose and how the remaining mass is spread. Confidence tells you <b style="color:var(--tx)">how strongly the model stands behind the answer</b> — the signal that decides whether your system should act automatically, act with an audit trail, or escalate.</p>
+    <div class="grid2">
+      <div class="card prim pc">
+        <h3>Probability</h3><div class="ptype">distribution over the options</div>
+        <p>"billing 0.61 · churn_risk 0.24" — useful for <b>sorting</b> queues, weighing composite scores, and detecting close calls between two options.</p>
+      </div>
+      <div class="card prim pn">
+        <h3>Confidence</h3><div class="ptype">how sure the model is · 0–1</div>
+        <p>"confidence 0.82" — useful for <b>gating</b>: act, sample-audit, or escalate. Choice and Score return it directly; Noul's probability is itself the gate.</p>
+      </div>
+    </div>
+    <div class="thresh">
+      <div class="th-row th-head"><div>Confidence</div><div>What your system should do</div><div>Code</div></div>
+      <div class="th-row"><div class="th-range" style="color:var(--green)">≥ 0.85</div><div><b>Act automatically.</b> Route, tag, approve — fully deterministic path, no human, no frontier model.</div><div class="th-act"><code>act(answer)</code></div></div>
+      <div class="th-row"><div class="th-range" style="color:var(--amber)">0.60 – 0.84</div><div><b>Act + audit.</b> Proceed, but sample a percentage into a review queue; track drift over time.</div><div class="th-act"><code>act(answer); audit(sample=0.1)</code></div></div>
+      <div class="th-row"><div class="th-range" style="color:var(--blue)">0.30 – 0.59</div><div><b>Escalate to a frontier model.</b> Send the state to GPT‑5.6 / Opus 5 / Gemini 3.1 for deep reasoning — only now.</div><div class="th-act"><code>escalate(state, "claude-opus-5")</code></div></div>
+      <div class="th-row"><div class="th-range" style="color:var(--red)">&lt; 0.30</div><div><b>Stop. Ask a human</b> — or re-ask as smaller, better-scoped questions with clearer instructions.</div><div class="th-act"><code>queue_for_human(state)</code></div></div>
+    </div>
+    <div class="split" style="margin-top:26px">
+      <div>
+        <div class="sect-lbl" style="margin-top:6px">Architectural rule of thumb</div>
+        <div class="codeblock" style="margin-top:8px"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">gating.py — confidence × risk</span><button class="copybtn">copy</button></div><pre class="code">def threshold_for(risk: str) -&gt; float:
     return {"low": 0.60, "medium": 0.75, "high": 0.90}[risk]
 
 ans = jev.evaluate(state=s, questions=[INTENT, URGENCY, PII])
@@ -898,20 +860,18 @@ conf = ans.answers["intent"].confidence
 risk = "high" if involves_payments(s) else "low"
 
 if conf &gt;= threshold_for(risk):
-    auto_act(ans)                       # most traffic ends here
+    auto_act(ans)
 else:
-    escalate(s, model="gpt-5.6-sol")    # pay frontier prices ONLY for doubt
+    escalate(s, model="gpt-5.6-sol")
 </pre></div>
-      <div class="callout"><b>Raise the bar with risk.</b> Tagging a ticket at 0.7 confidence is fine. Refunding $4,800 at 0.7 is not — high-stakes actions get a higher threshold, which simply shifts more traffic to the escalation branch.</div>
-    </div>
-    <div>
-      <div class="sect-lbl" style="margin-top:6px">State &amp; advanced structure</div>
-      <div class="codeblock" style="margin-top:8px"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">question with instructions + structured criteria</span><button class="copybtn">copy</button></div><pre class="code">{
+        <div class="callout"><b>Raise the bar with risk.</b> Tagging a ticket at 0.7 confidence is fine. Processing an irreversible financial action usually warrants a higher threshold.</div>
+      </div>
+      <div>
+        <div class="sect-lbl" style="margin-top:6px">State &amp; criteria structure</div>
+        <div class="codeblock" style="margin-top:8px"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">structured criteria</span><button class="copybtn">copy</button></div><pre class="code">{
   "id": "refund_ok",
   "type": "noul",
-  "instructions": "Apply the refund policy in state.policy.
-                   Amounts above the limit always require
-                   manager sign-off.",
+  "instructions": "Apply policy in state.policy. Amounts above limit require manager sign-off.",
   "question": "Can this refund be approved automatically?",
   "criteria": {
     "policy": { "window_days": 30, "limit_usd": 5000 },
@@ -919,128 +879,124 @@ else:
     "within_window": true
   }
 }
-// instructions, Choice options, Score levels and Noul
-// criteria all accept structured JSON — not just strings.</pre></div>
-      <div class="callout good"><b>Structure the state, keep it relevant.</b> Send the fields a knowledgeable person would need — customer tier, amounts, history, policy — as clean JSON. Every question sees the same state; each is judged in isolation, so extra questions cost almost nothing.</div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ ROUTING ============ -->
-<section id="routing" class="reveal">
-  <div class="kicker">Confidence-gated routing · the killer pattern</div>
-  <h2>Put a $0.0003 decision in front of a $0.01 model.</h2>
-  <p class="lead">You don't replace frontier models — you <b style="color:var(--tx)">stop sending them traffic that doesn't need them</b>. Jev answers every request in ~172 ms with a confidence score. Confident answers go straight into deterministic code paths; only the uncertain, risky, ambiguous few get escalated to GPT‑5.6 / Claude Opus 5 / Gemini 3.1 Pro for deep reasoning — or to a human.</p>
-
-  <div class="route-diagram">
-    <div class="rd-flow">
-      <div class="rd-node"><div class="t">100% of traffic</div><div class="s">tickets · PRs · leads · requests</div></div>
-      <div class="rd-arrow"></div>
-      <div class="rd-node gate"><div class="t">⚡ Jev gate</div><div class="s">~172 ms · $0.00027 / req<br>choice + probabilities + confidence</div></div>
-      <div class="rd-split">
-        <div class="rd-branch">
-          <span class="rd-lbl g">confidence ≥ 0.6 · ~88%</span><div class="rd-arrow g"></div>
-          <div class="rd-node cheap"><div class="t">Deterministic code path</div><div class="s">$0 · if/else · queue · webhook</div></div>
-        </div>
-        <div class="rd-branch">
-          <span class="rd-lbl v">low confidence / high risk · ~12%</span><div class="rd-arrow"></div>
-          <div class="rd-node price"><div class="t">Frontier deep-reasoning</div><div class="s">GPT‑5.6 · Opus 5 · Gemini 3.1 · ~3 s<br>full chain-of-thought response</div></div>
-        </div>
+</pre></div>
+        <div class="callout good"><b>Structure your inputs cleanly.</b> Send relevant facts, policies, and parameters directly in JSON. Evaluated in isolation, extra questions add near-zero latency overhead.</div>
       </div>
     </div>
-    <div class="codeblock" style="margin-top:26px"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">router.py — confidence as the second axis</span><button class="copybtn">copy</button></div><pre class="code">ans = jev.evaluate(state={"ticket": t}, questions=[INTENT, URGENCY, PII])
+  </section>
+
+  <!-- ============ ROUTING ============ -->
+  <section id="routing" class="reveal">
+    <div class="kicker">Confidence-gated routing</div>
+    <h2>Put a $0.0003 decision in front of a $0.01 model.</h2>
+    <p class="lead">You don't replace frontier models — you <b style="color:var(--tx)">stop sending them traffic that doesn't need them</b>. Jev answers every request in ~172 ms with a confidence score. Confident answers go straight into deterministic code paths; only uncertain or high-risk cases escalate to larger models.</p>
+    <div class="route-diagram">
+      <div class="rd-flow">
+        <div class="rd-node"><div class="t">100% of traffic</div><div class="s">tickets · PRs · leads · requests</div></div>
+        <div class="rd-arrow"></div>
+        <div class="rd-node gate"><div class="t">⚡ Jev gate</div><div class="s">~172 ms · $0.00027 / req<br>choice + probabilities + confidence</div></div>
+        <div class="rd-split">
+          <div class="rd-branch">
+            <span class="rd-lbl g">confidence ≥ 0.6 · ~88%</span><div class="rd-arrow g"></div>
+            <div class="rd-node cheap"><div class="t">Deterministic code path</div><div class="s">$0 · if/else · queue · webhook</div></div>
+          </div>
+          <div class="rd-branch">
+            <span class="rd-lbl v">low confidence / high risk · ~12%</span><div class="rd-arrow"></div>
+            <div class="rd-node price"><div class="t">Frontier deep-reasoning</div><div class="s">GPT‑5.6 · Opus 5 · Gemini 3.1<br>full reasoning workflow</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="codeblock" style="margin-top:26px"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">router.py — confidence routing</span><button class="copybtn">copy</button></div><pre class="code">ans = jev.evaluate(state={"ticket": t}, questions=[INTENT, URGENCY, PII])
 
 if ans.answers["intent"].confidence &gt;= 0.6 and ans.answers["urgency"].score &lt;= 3:
-    auto_route(ans.answers["intent"].choice, t)            # 88% of traffic ends here — $0.00027
+    auto_route(ans.answers["intent"].choice, t)
 elif ans.answers["contains_pii"].noul &gt; 0.7:
-    t = redact(t); escalate(t, model="gpt-5.6-luna")       # cheap frontier tier for the careful path
+    t = redact(t)
+    escalate(t, model="gpt-5.6-luna")
 else:
-    escalate(t, model="claude-opus-5")                     # the flagship sees ONLY the hard 12%
+    escalate(t, model="claude-opus-5")
 </pre></div>
-  </div>
-
-  <div class="calc">
-    <div class="calc-in">
-      <div class="sect-lbl" style="margin-bottom:2px">Savings calculator · monthly</div>
-      <label>Decisions / month <output id="reqOut">1,000,000</output></label>
-      <input type="range" id="reqSlider" min="0" max="100" value="66.7" step="0.1">
-      <label>Escalated to frontier model <output id="escOut">12%</output></label>
-      <input type="range" id="escSlider" min="0" max="50" value="12" step="1">
-      <label style="margin-top:22px">Frontier / open model behind the gate</label>
-      <select class="pgsel" id="calcModel" style="width:100%"></select>
-      <p class="note" style="margin-top:18px">Pipeline A: every decision goes to the model (short classification call). Pipeline B: Jev answers everything; only escalated requests reach the model for a deep response (~3.5k in / 1.5k out tokens).</p>
     </div>
-    <div class="calc-out">
-      <div class="pipe a">
-        <div class="pt">Pipeline A</div>
-        <div class="pn">Text model for everything</div>
-        <div class="pd" id="aDetail">—</div>
-        <div class="pc" id="aCost">$0</div>
-        <div class="pd">≈ <span id="aLat">—</span> per decision</div>
+
+    <div class="calc">
+      <div class="calc-in">
+        <div class="sect-lbl" style="margin-bottom:2px">Savings calculator · monthly</div>
+        <label>Decisions / month <output id="reqOut">1,000,000</output></label>
+        <input type="range" id="reqSlider" min="0" max="100" value="66.7" step="0.1">
+        <label>Escalated to frontier model <output id="escOut">12%</output></label>
+        <input type="range" id="escSlider" min="0" max="50" value="12" step="1">
+        <label style="margin-top:22px">Frontier / open model behind the gate</label>
+        <select class="pgsel" id="calcModel" style="width:100%"></select>
+        <p class="note" style="margin-top:18px">Pipeline A: every decision goes to the full model. Pipeline B: Jev gates every decision, escalating only when confidence is low or risk is elevated.</p>
       </div>
-      <div class="vs">
-        <div class="vsl">you save</div>
-        <div class="vsv" id="saveAmt">$0</div>
-        <div class="vsl" id="savePct">—</div>
-        <div class="bar"><i id="saveBar"></i></div>
-      </div>
-      <div class="pipe b">
-        <div class="pt">Pipeline B</div>
-        <div class="pn">Jev gate + model for the hard few</div>
-        <div class="pd" id="bDetail">—</div>
-        <div class="pc" id="bCost">$0</div>
-        <div class="pd">≈ <span id="bLat">—</span> blended per decision</div>
+      <div class="calc-out">
+        <div class="pipe a">
+          <div class="pt">Pipeline A</div>
+          <div class="pn">Text model for everything</div>
+          <div class="pd" id="aDetail">—</div>
+          <div class="pc" id="aCost">$0</div>
+          <div class="pd">≈ <span id="aLat">—</span> per decision</div>
+        </div>
+        <div class="vs">
+          <div class="vsl">you save</div>
+          <div class="vsv" id="saveAmt">$0</div>
+          <div class="vsl" id="savePct">—</div>
+          <div class="bar"><i id="saveBar"></i></div>
+        </div>
+        <div class="pipe b">
+          <div class="pt">Pipeline B</div>
+          <div class="pn">Jev gate + model for escalations</div>
+          <div class="pd" id="bDetail">—</div>
+          <div class="pc" id="bCost">$0</div>
+          <div class="pd">≈ <span id="bLat">—</span> blended per decision</div>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ============ USE CASES ============ -->
-<section id="usecases" class="reveal">
-  <div class="kicker">Example use cases</div>
-  <h2>Narrow decisions, everywhere a judgment blocks your code.</h2>
-  <div class="grid3">
-    <div class="card uc"><div class="ico">🎫</div><h3>Support triage &amp; routing</h3><p>Classify intent, urgency and PII on every ticket in ~172 ms. Auto-route 88%, escalate churn-risk and low-confidence cases.</p><div class="qs"><b>Choice</b> intent · <b>Score</b> urgency · <b>Noul</b> contains_pii</div></div>
-    <div class="card uc"><div class="ico">🧑‍💻</div><h3>Code review / PR gating</h3><p>Risk-level every PR before merge. Block critical-risk diffs automatically; ask humans only when confidence is low.</p><div class="qs"><b>Choice</b> risk · <b>Noul</b> tests_adequate · <b>Score</b> maintainability</div></div>
-    <div class="card uc"><div class="ico">📈</div><h3>Lead scoring &amp; sales routing</h3><p>Segment and score every inbound lead the moment it lands. Sales calls the sales-ready ones first — sorted by fit probability.</p><div class="qs"><b>Choice</b> segment · <b>Score</b> icp_fit · <b>Noul</b> sales_ready</div></div>
-    <div class="card uc"><div class="ico">🏠</div><h3>Smart home assistant <span class="tagline tg-good" style="margin-left:4px">docs demo</span></h3><p>Evaluate each voice request before execution: which device, which action, is it safe? Deterministic execution in ~200 ms — no full LLM round-trip per command.</p><div class="qs"><b>Choice</b> device · <b>Choice</b> action · <b>Noul</b> is_safe</div></div>
-    <div class="card uc"><div class="ico">🛡️</div><h3>Fraud &amp; chargeback screening</h3><p>Score every transaction against rubric levels inline. High-risk + high-confidence → auto-block; ambiguous → frontier model or human reviewer.</p><div class="qs"><b>Score</b> fraud_risk · <b>Noul</b> matches_known_pattern</div></div>
-    <div class="card uc"><div class="ico">🧹</div><h3>Content moderation queues</h3><p>Fan out a dozen policy questions per item in one call (speculative fan-out). Moderators only ever see the low-confidence residue.</p><div class="qs"><b>Noul</b> × policy rules · <b>Choice</b> violation_category</div></div>
-  </div>
-</section>
-
-<!-- ============ PATTERNS ============ -->
-<section id="patterns" class="reveal">
-  <div class="kicker">Architectural patterns</div>
-  <h2>Keep code in control. Give the model narrow decisions.</h2>
-  <div class="grid4">
-    <div class="card pat"><div class="pnum">01</div><h3>Confidence-gated routing</h3><p>The answer tells you <b>what</b>; confidence tells you <b>whether to act</b>. High confidence → automatic path. Low confidence → frontier model, human review, or a second, narrower question.</p></div>
-    <div class="card pat"><div class="pnum">02</div><h3>Composite scoring</h3><p>Never ask one big "rate this" question. Ask atomic Score questions per dimension, combine with weights <b>in your code</b>. Change priorities by changing a coefficient, not a prompt.</p></div>
-    <div class="card pat"><div class="pnum">03</div><h3>Intent routing</h3><p>Classify every incoming request in ~172 ms and route it to the optimal handler: deterministic logic, GPT‑5.6 Luna, DeepSeek V4 Flash, a specialist model, or a human. The router costs fractions of a cent.</p></div>
-    <div class="card pat"><div class="pnum">04</div><h3>Speculative fan-out</h3><p>Send <b>many</b> questions in one call — including speculative ones ("would this user churn?", "does this need legal?"). Adding questions barely changes latency; your code decides which answers matter.</p></div>
-  </div>
-
-  <div class="cta reveal">
-    <div class="kicker" style="justify-content:center">Next steps</div>
-    <h2>Your first decision is one API call away.</h2>
-    <p class="lead" style="margin:14px auto 30px;text-align:center">Quick Start · AI Primer · Primitives · State · Confidence · Patterns · Demos · Python &amp; JS SDKs · API Reference — everything is in the docs.</p>
-    <div class="hero-ctas" style="margin-top:0">
-      <a class="btn btn-p" href="#quickstart">↑ Jump to the quickstart</a>
-      <a class="btn btn-g" href="https://docs.typesafe.ai" target="_blank" rel="noopener">docs.typesafe.ai ↗</a>
+  <!-- ============ USE CASES ============ -->
+  <section id="usecases" class="reveal">
+    <div class="kicker">Example use cases</div>
+    <h2>Narrow decisions, everywhere a judgment blocks your code.</h2>
+    <div class="grid3">
+      <div class="card uc"><div class="ico">🎫</div><h3>Support triage &amp; routing</h3><p>Classify intent, urgency and PII on every ticket in ~172 ms. Auto-route 88%, escalate churn-risk and low-confidence cases.</p><div class="qs"><b>Choice</b> intent · <b>Score</b> urgency · <b>Noul</b> contains_pii</div></div>
+      <div class="card uc"><div class="ico">🧑‍💻</div><h3>Code review / PR gating</h3><p>Risk-level every PR before merge. Block critical-risk diffs automatically; ask humans only when confidence is low.</p><div class="qs"><b>Choice</b> risk · <b>Noul</b> tests_adequate · <b>Score</b> maintainability</div></div>
+      <div class="card uc"><div class="ico">📈</div><h3>Lead scoring &amp; sales routing</h3><p>Segment and score every inbound lead the moment it lands. Sales calls the sales-ready ones first — sorted by fit probability.</p><div class="qs"><b>Choice</b> segment · <b>Score</b> icp_fit · <b>Noul</b> sales_ready</div></div>
+      <div class="card uc"><div class="ico">🏠</div><h3>Smart home assistant</h3><p>Evaluate each voice request before execution: which device, which action, is it safe? Deterministic execution without slow chat roundtrips.</p><div class="qs"><b>Choice</b> device · <b>Choice</b> action · <b>Noul</b> is_safe</div></div>
+      <div class="card uc"><div class="ico">🛡️</div><h3>Fraud &amp; chargeback screening</h3><p>Score every transaction against rubric levels inline. High-risk + high-confidence → auto-block; ambiguous → secondary review.</p><div class="qs"><b>Score</b> fraud_risk · <b>Noul</b> matches_known_pattern</div></div>
+      <div class="card uc"><div class="ico">🧹</div><h3>Content moderation queues</h3><p>Fan out a dozen policy questions per item in one call. Moderators only ever review low-confidence residue.</p><div class="qs"><b>Noul</b> × policy rules · <b>Choice</b> violation_category</div></div>
     </div>
-  </div>
-</section>
+  </section>
 
+  <!-- ============ PATTERNS ============ -->
+  <section id="patterns" class="reveal">
+    <div class="kicker">Architectural patterns</div>
+    <h2>Keep code in control. Give the model narrow decisions.</h2>
+    <div class="grid4">
+      <div class="card pat"><div class="pnum">01</div><h3>Confidence-gated routing</h3><p>The answer tells you <b>what</b>; confidence tells you <b>whether to act</b>. High confidence routes automatically; low confidence escalates to deeper models or humans.</p></div>
+      <div class="card pat"><div class="pnum">02</div><h3>Composite scoring</h3><p>Avoid single, ambiguous scoring prompts. Ask atomic Score questions per dimension and combine with weights in deterministic code.</p></div>
+      <div class="card pat"><div class="pnum">03</div><h3>Intent routing</h3><p>Quickly classify incoming traffic and route to specialized backends, models, or queues with minimal compute overhead.</p></div>
+      <div class="card pat"><div class="pnum">04</div><h3>Speculative fan-out</h3><p>Evaluate many atomic questions in a single roundtrip. Additional questions run in parallel with negligible latency impact.</p></div>
+    </div>
+    <div class="cta reveal">
+      <div class="kicker" style="justify-content:center">Next steps</div>
+      <h2>Your first decision is one API call away.</h2>
+      <p class="lead" style="margin:14px auto 30px;text-align:center">Quick Start · AI Primer · Primitives · State · Confidence · Patterns · Demos · Python &amp; JS SDKs · API Reference.</p>
+      <div class="hero-ctas" style="margin-top:0">
+        <a class="btn btn-p" href="#quickstart">↑ Jump to the quickstart</a>
+        <a class="btn btn-g" href="https://docs.typesafe.ai" target="_blank" rel="noopener">docs.typesafe.ai ↗</a>
+      </div>
+    </div>
+  </section>
 </main>
-
 <footer>
   <div class="logo" style="justify-content:center"><span class="mark">TS</span>TypeSafe — System One models for software decisions</div>
-  <div class="fl">Jev · Choice · Score · Noul · State · Confidence · Patterns · SDKs — concept site built from docs.typesafe.ai. Model lineup &amp; per-token pricing reflect public sources as of Sep 21, 2026 (GPT‑5.6 Sol/Luna, Claude Opus 5 / Fable 5.1, Gemini 3.1 Pro / 3.8 Flash, Qwen3.8‑Max, Kimi K2.6, DeepSeek V4 Flash). Jev pricing illustrative. Playground responses are simulated.</div>
+  <div class="fl">Jev · Choice · Score · Noul · State · Confidence · Patterns · SDKs. Interactive playground displays simulated data for demonstration purposes.</div>
 </footer>
 
 <script>
 /* =========================================================
-   DATA — verified against public pricing, Sep 21 2026
+   DATA — Model configurations and pricing
 ========================================================= */
 const MODEL_PRICING = {
   jev:      {name:'Jev (TypeSafe)',      fam:'System One decision model',        color:'#22d3ee', perQuestion:0.00009, latency:'~172 ms', latMs:172},
@@ -1051,7 +1007,7 @@ const MODEL_PRICING = {
   gemflash: {name:'Gemini 3.8 Flash',    fam:'Google · fast tier ($0.75/$3.75)', color:'#7dd3fc', in:0.75, out:3.75, latency:'~1.2 s', latMs:1200},
   kimi:     {name:'Kimi K2.6',           fam:'Moonshot · open ($0.60/$2.50)',    color:'#22d3ee', in:0.60, out:2.50, latency:'~2.0 s', latMs:2000},
   gptluna:  {name:'GPT-5.6 Luna',        fam:'OpenAI · budget ($0.20/$1.20)',    color:'#a7f3d0', in:0.20, out:1.20, latency:'~0.9 s', latMs:900},
-  deepseek: {name:'DeepSeek V4 Flash',   fam:'DeepSeek · open ($0.14/$0.28 off-peak)', color:'#34d399', in:0.14, out:0.28, latency:'~1.4 s', latMs:1400}
+  deepseek: {name:'DeepSeek V4 Flash',   fam:'DeepSeek · open ($0.14/$0.28)',    color:'#34d399', in:0.14, out:0.28, latency:'~1.4 s', latMs:1400}
 };
 const SIMPLE_IN=900, SIMPLE_OUT=180, RETRY=1.08;
 const DEEP_IN=3500, DEEP_OUT=1500;
@@ -1082,9 +1038,9 @@ const SCENARIOS = {
       {id:'contains_pii', type:'noul', value:0.83, conf:{label:'high',v:0.81}}
     ],
     parsed:{intent:'billing', urgency:4, contains_pii:true},
-    sys:'You are a strict ticket classifier. Read the state and answer every question.\nRespond ONLY with JSON: {"intent": "billing|bug_report|feature_request|churn_risk",\n"urgency": int 1-5, "contains_pii": bool}. No prose, no fences. If unsure, guess.',
+    sys:'You are a strict ticket classifier. Read the state and answer every question.\nRespond ONLY with JSON: {"intent": "billing|bug_report|feature_request|churn_risk",\n"urgency": int 1-5, "contains_pii": bool}. No prose, no fences.',
     good:'{\n  "intent": "billing",\n  "urgency": 4,\n  "contains_pii": true\n}\n',
-    bad:'Sure — here is my analysis of the ticket:\n\nThe customer was double-billed, which is primarily a **billing** issue, though the\nmention of pausing renewal adds churn risk. Urgency feels high because of the CFO.\n\n\u0060\u0060\u0060json\n{\n  "intent": "billing",\n  "urgency": "4 (high — same day)",\n  "contains_pii": true,\n  "reasoning": "double charge + renewal threat"\n\u0060\u0060\u0060\n\nLet me know if you would like me to draft the refund email!'
+    bad:'Sure — here is my analysis of the ticket:\n\nThe customer was double-billed, which is primarily a **billing** issue, though the\nmention of pausing renewal adds churn risk. Urgency feels high because of the CFO.\n\n```json\n{\n  "intent": "billing",\n  "urgency": "4 (high — same day)",\n  "contains_pii": true,\n  "reasoning": "double charge + renewal threat"\n}\n```\n\nLet me know if you would like me to draft the refund email!'
   },
   review: {
     label:'PR risk gate',
@@ -1111,7 +1067,7 @@ const SCENARIOS = {
     parsed:{risk:'high', tests_adequate:false, maintainability:2},
     sys:'You are a strict code-review gate. Read the PR state and answer every question.\nRespond ONLY with JSON: {"risk": "low|medium|high|critical",\n"tests_adequate": bool, "maintainability": int 1-5}. No prose, no fences.',
     good:'{\n  "risk": "high",\n  "tests_adequate": false,\n  "maintainability": 2\n}\n',
-    bad:'Looking at this PR, several things stand out. It touches payments and the ledger,\nadds no tests, and coverage *dropped* 8 points. That is concerning.\n\n{\n  "risk": "HIGH",\n  "tests_adequate": "no",\n  "maintainability": 2.5,\n  "notes": "recommend blocking until tests are added"\n'
+    bad:'Looking at this PR, several things stand out. It touches payments and the ledger,\nadds no tests, and coverage *dropped* 8 points.\n\n{\n  "risk": "HIGH",\n  "tests_adequate": "no",\n  "maintainability": 2.5,\n  "notes": "recommend blocking until tests are added"\n'
   },
   lead: {
     label:'Lead qualification',
@@ -1137,12 +1093,12 @@ const SCENARIOS = {
     parsed:{segment:'smb', fit:4, sales_ready:true},
     sys:'You are a strict lead qualifier. Read the CRM state and answer every question.\nRespond ONLY with JSON: {"segment": "enterprise|smb|startup|individual",\n"fit": int 1-5, "sales_ready": bool}. No prose, no fences.',
     good:'{\n  "segment": "smb",\n  "fit": 4,\n  "sales_ready": true\n}\n',
-    bad:'Great lead! Here is my take:\n\n- 180 employees → mid-market / SMB territory\n- 7 pricing-page views + SOC 2 questions = high intent\n- No price objections yet, wants a 25-seat pilot\n\n\u0060\u0060\u0060json\n{"segment": "smb", "fit": "4 out of 5", "sales_ready": "yes", "next_step": "book demo"}\n\u0060\u0060\u0060\n\nWant me to draft the outreach email?'
+    bad:'Great lead! Here is my take:\n\n- 180 employees → mid-market / SMB territory\n- 7 pricing-page views + SOC 2 questions = high intent\n\n```json\n{"segment": "smb", "fit": "4 out of 5", "sales_ready": "yes", "next_step": "book demo"}\n```\n\nWant me to draft the outreach email?'
   }
 };
 
 /* =========================================================
-   UTIL
+   UTILITIES
 ========================================================= */
 const $ = s => document.querySelector(s);
 const $$ = s => Array.from(document.querySelectorAll(s));
@@ -1173,6 +1129,7 @@ function setCode(el, text){
   el.innerHTML = esc(text);
   highlightEl(el);
 }
+
 document.addEventListener('click', function(e){
   if (e.target.classList.contains('copybtn')){
     const pre = e.target.closest('.codeblock').querySelector('pre.code');
@@ -1183,8 +1140,24 @@ document.addEventListener('click', function(e){
   }
 });
 
+/* Mobile Nav Toggle */
+const navToggle = $('#navToggle');
+const navLinks = $('#navLinks');
+if (navToggle && navLinks) {
+  navToggle.addEventListener('click', function(){
+    navLinks.classList.toggle('open');
+    navToggle.textContent = navLinks.classList.contains('open') ? 'Close' : 'Menu';
+  });
+  $$('#navLinks a').forEach(function(a){
+    a.addEventListener('click', function(){
+      navLinks.classList.remove('open');
+      navToggle.textContent = 'Menu';
+    });
+  });
+}
+
 /* =========================================================
-   REVEAL / PROGRESS / NAV / COUNTERS
+   SCROLL OBSERVERS & COUNTERS
 ========================================================= */
 const revealObs = new IntersectionObserver(function(entries){
   entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('visible'); revealObs.unobserve(en.target); } });
@@ -1193,7 +1166,8 @@ $$('.reveal').forEach(function(el){ revealObs.observe(el); });
 
 window.addEventListener('scroll', function(){
   const h = document.documentElement;
-  $('#progress').style.width = (h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
+  const progress = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  $('#progress').style.width = Math.min(100, Math.max(0, progress)) + '%';
 });
 
 const navObs = new IntersectionObserver(function(entries){
@@ -1253,7 +1227,7 @@ $$('#qsTabs .tab').forEach(function(btn){
     div.innerHTML =
       '<div class="ct-model"><i style="background:'+m.color+'"></i><span>'+m.name+'<span class="fam">'+m.fam+'</span></span></div>'+
       '<div class="ct-bar"><div class="ct-fill" data-w="'+(r.cost/max*100)+'" style="background:linear-gradient(90deg,'+m.color+'55,'+m.color+')"></div></div>'+
-      '<div class="ct-cost">'+fmtMoney(r.cost,2)+'<small>'+(r.key==='jev'?'3 questions · $0.09/1k q':'+8% retries & glue code')+'</small></div>'+
+      '<div class="ct-cost">'+fmtMoney(r.cost,2)+'<small>'+(r.key==='jev'?'3 questions evaluated':'+8% retry allowance')+'</small></div>'+
       '<div class="ct-lat">'+r.latency+'</div>';
     table.appendChild(div);
   });
@@ -1288,16 +1262,16 @@ $$('#qsTabs .tab').forEach(function(btn){
     const save = a-b, pct = a>0 ? save/a*100 : 0;
 
     $('#aCost').textContent = fmtMoney(a,1);
-    $('#aDetail').textContent = fmtInt(reqs)+' × $'+aPer.toFixed(6)+' (classification calls, incl. retries)';
+    $('#aDetail').textContent = fmtInt(reqs)+' × $'+aPer.toFixed(6)+' (classification calls)';
     $('#bCost').textContent = fmtMoney(b,1);
-    $('#bDetail').textContent = fmtInt(reqs)+' × $'+jevCostPerReq().toFixed(5)+' Jev  +  '+fmtInt(reqs*escRate)+' × $'+deepPer.toFixed(4)+' deep calls';
+    $('#bDetail').textContent = fmtInt(reqs)+' × $'+jevCostPerReq().toFixed(5)+' Jev + '+fmtInt(reqs*escRate)+' escalated';
 
     const sv = $('#saveAmt');
     sv.textContent = (save>=0?'':'-') + fmtMoney(Math.abs(save),1) + '/mo';
     sv.classList.toggle('neg', save<0);
     $('#savePct').textContent = save>=0
-      ? pct.toFixed(1)+'% cheaper · '+fmtMoney(save*12,1)+' / year'
-      : 'open-model tokens already near decision price — Jev still wins on ~172 ms latency, guaranteed typing & calibrated confidence (infra costs excluded)';
+      ? pct.toFixed(1)+'% saved · '+fmtMoney(save*12,1)+' / year'
+      : 'Open-model token cost is close to decision floor; Jev provides lower latency & calibrated confidence';
     $('#saveBar').style.width = Math.max(0,Math.min(100,pct))+'%';
 
     $('#aLat').textContent = (m.latMs/1000).toFixed(1)+' s';
@@ -1391,7 +1365,7 @@ function renderStatic(){
   idlePanel();
 }
 
-/* ---------- JEV RUN ---------- */
+/* ---------- JEV EXECUTION ---------- */
 function runJev(){
   const sc=SCENARIOS[PG.scen];
   pgRunning=true; $('#pgRun').disabled=true; pgClearTimers();
@@ -1432,12 +1406,12 @@ function runJev(){
         {v:'0',k:'tokens parsed',cls:'g'},
         {v:'0',k:'retries needed',cls:'g'}
       ])+
-      '<div class="verdict">✓ Every answer is schema-typed with a full probability distribution + calibrated confidence. Your code can <b>branch</b> (intent.choice), <b>sort</b> (probabilities) and <b>gate</b> (confidence &lt; 0.6 → escalate to a frontier model) — with no parsing, validation or repair code.</div>';
+      '<div class="verdict">✓ Every answer is schema-typed with a full probability distribution and calibrated confidence. Your code branches deterministically without JSON parsing or error recovery wrappers.</div>';
     pgRunning=false; $('#pgRun').disabled=false;
   }, 320+sc.jev.length*320+500);
 }
 
-/* ---------- LLM RUN ---------- */
+/* ---------- TEXT LLM EXECUTION ---------- */
 function runLlm(){
   const sc=SCENARIOS[PG.scen];
   const mk=$('#pgModel').value, m=MODEL_PRICING[mk];
@@ -1461,7 +1435,7 @@ function runLlm(){
   const log=$('#pgLog');
   function logLine(html,delay){ pgLater(function(){ log.insertAdjacentHTML('beforeend','<div class="logline">'+html+'</div>'); },delay); }
   logLine('<span class="inf">→</span> POST /chat/completions · model='+m.name+' · prompt ≈ '+SIMPLE_IN+' tokens',0);
-  logLine('<span class="wr">⏳</span> generating text tokens (you pay for every one, output @ $'+m.out+'/1M)…',400);
+  logLine('<span class="wr">⏳</span> generating text tokens (billed output rate: $'+m.out+'/1M)…',400);
 
   const streamEl=$('#pgStream');
   function streamText(text,ms,cb){
@@ -1475,48 +1449,51 @@ function runLlm(){
     pgTimers.push(t);
   }
 
-  function tryParse(ok){
-    const parse=$('#pgParse');
-    if(!ok){
-      parse.innerHTML=
-        '<div class="logline"><span class="er">✕ json.loads() failed</span> — JSONDecodeError: prose outside object · fenced block · truncated</div>'+
-        '<div class="logline"><span class="er">✕ schema validation failed</span> — expected int / bool / enum, got strings like "4 (high — same day)"</div>'+
-        '<div class="logline"><span class="wr">↻ retry 1/2</span> — repair prompt: "Return ONLY valid JSON, no prose" · +'+SIMPLE_IN+' tokens billed again…</div>';
-      pgLater(function(){
-        streamEl.innerHTML='';
-        logLine('<span class="inf">→</span> retry request sent · billing doubles',0);
-        streamText(sc.good,1700,function(){ finishParse(true); });
-      },1200);
-    } else {
-      finishParse(false);
-    }
-  }
-  function finishParse(retried){
-    const parse=$('#pgParse');
-    parse.innerHTML=
-      '<div class="logline"><span class="ok">✓ json.loads() OK</span> — extracted object'+(retried||!firstAttempt?' (after retry)':'')+'</div>'+
-      '<div class="logline"><span class="ok">✓ pydantic validation OK</span> — enums &amp; types coerced into your schema</div>'+
-      '<div class="codeblock" style="margin-top:10px"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">parsed decision — finally usable</span></div><pre class="code" id="pgParsed"></pre></div>';
-    setCode($('#pgParsed'), JSON.stringify(sc.parsed,null,2));
-    finish(retried||!firstAttempt);
-  }
   function finish(hadRetry){
     clearInterval(iv);
     const elapsed=Math.round(performance.now()-t0);
     timerEl.textContent=elapsed+' ms';
     const calls = hadRetry ? 2 : 1;
-    const cost=llmCostPerReq(m,SIMPLE_IN,SIMPLE_OUT)*calls;
+    const cost = llmCostPerReq(m, SIMPLE_IN, SIMPLE_OUT) * calls;
     $('#pgFoot').innerHTML=
       statBar([
         {v:(elapsed/1000).toFixed(1)+' s',k:'wall-clock latency',cls:'r'},
         {v:'$'+cost.toFixed(6),k:'cost · '+calls+' call'+(calls>1?'s (retry)':''),cls:'r'},
-        {v:(SIMPLE_OUT*calls)+'+',k:'output tokens billed',cls:''},
+        {v:(SIMPLE_OUT * calls)+'+',k:'output tokens billed',cls:''},
         {v:hadRetry?'1':'0',k:'parse failures',cls:hadRetry?'r':'g'}
       ])+
       '<div class="verdict">'+(hadRetry
-        ? '✕ The first response wrapped the JSON in prose and fences, returned <b>"4 (high — same day)"</b> instead of an int, and truncated the object — the classic failure you build retry/repair code for. Run it again to see the "clean" path… which still gives you <b>bare values</b>: no probabilities, no confidence.'
-        : '✓ Parsed successfully — but notice what your code still doesn\'t get: <b>no distribution, no confidence</b>. "urgency": 4 at 51% certainty and "urgency": 4 at 99% certainty look identical. That\'s why text-LLM decisions can\'t be safely auto-acted on — and why Jev sits in front of them.</div>');
+        ? '✕ The first response wrapped the JSON in prose and returned invalid string formats. Run it again to see the repaired path, which remains limited to uncalibrated bare values.'
+        : '✓ Parsed successfully — however, code still receives only bare values without probability distributions or calibrated uncertainty for confidence checks.')+
+      '</div>';
     pgRunning=false; $('#pgRun').disabled=false;
+  }
+
+  function finishParse(retried){
+    const parse=$('#pgParse');
+    parse.innerHTML=
+      '<div class="logline"><span class="ok">✓ json.loads() OK</span> — extracted object'+(retried||!firstAttempt?' (after retry)':'')+'</div>'+
+      '<div class="logline"><span class="ok">✓ pydantic validation OK</span> — schema validated</div>'+
+      '<div class="codeblock" style="margin-top:10px"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">parsed decision</span></div><pre class="code" id="pgParsed"></pre></div>';
+    setCode($('#pgParsed'), JSON.stringify(sc.parsed,null,2));
+    finish(retried||!firstAttempt);
+  }
+
+  function tryParse(ok){
+    const parse=$('#pgParse');
+    if(!ok){
+      parse.innerHTML=
+        '<div class="logline"><span class="er">✕ json.loads() failed</span> — prose found outside JSON payload</div>'+
+        '<div class="logline"><span class="er">✕ schema validation failed</span> — type mismatch in parsed keys</div>'+
+        '<div class="logline"><span class="wr">↻ retry 1/2</span> — issuing repair prompt with re-billed prompt tokens…</div>';
+      pgLater(function(){
+        streamEl.innerHTML='';
+        logLine('<span class="inf">→</span> retry request dispatched',0);
+        streamText(sc.good,1700,function(){ finishParse(true); });
+      },1200);
+    } else {
+      finishParse(false);
+    }
   }
 
   pgLater(function(){
@@ -1525,7 +1502,7 @@ function runLlm(){
   },900);
 }
 
-/* wire up */
+/* Event wiring */
 $('#pgRun').addEventListener('click', function(){
   if(pgRunning) return;
   if(PG.mode==='jev'){ runJev(); } else { runLlm(); }
@@ -1549,7 +1526,7 @@ $('#scenTabs').addEventListener('click', function(e){
 $('#pgModel').addEventListener('change', renderStatic);
 renderStatic();
 
-/* highlight all static code blocks */
+/* Highlight all static code blocks */
 $$('pre.code').forEach(function(el){ highlightEl(el); });
 </script>
 </body>
