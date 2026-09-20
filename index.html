@@ -36,13 +36,13 @@ a{color:var(--cyan);text-decoration:none}
 #progress{position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,var(--cyan),var(--violet));z-index:200;transition:width .1s linear}
 
 nav{position:sticky;top:0;z-index:100;background:rgba(7,11,20,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-.navin{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:26px;padding:0 24px;height:60px}
+.navin{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:20px;padding:0 24px;height:60px}
 .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:16px;letter-spacing:-.02em;color:#fff;white-space:nowrap}
 .logo .mark{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--cyan),var(--violet));display:grid;place-items:center;font-family:var(--mono);font-weight:700;font-size:13px;color:#04121a}
 .logo small{font-family:var(--mono);font-weight:500;font-size:10px;color:var(--cyan);border:1px solid rgba(34,211,238,.35);padding:1px 6px;border-radius:99px;margin-left:2px}
-.navlinks{display:flex;gap:4px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.navlinks{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
 .navlinks::-webkit-scrollbar{display:none}
-.navlinks a{color:var(--dim);font-size:13px;font-weight:500;padding:7px 12px;border-radius:8px;white-space:nowrap;transition:.2s}
+.navlinks a{color:var(--dim);font-size:12.5px;font-weight:500;padding:7px 10px;border-radius:8px;white-space:nowrap;transition:.2s}
 .navlinks a:hover{color:#fff;background:rgba(255,255,255,.05)}
 .navlinks a.active{color:var(--cyan);background:rgba(34,211,238,.08)}
 .navcta{font-size:13px;font-weight:600;padding:8px 16px;border-radius:9px;background:linear-gradient(135deg,var(--cyan),#0ea5c4);color:#04121a;white-space:nowrap;transition:.2s}
@@ -136,6 +136,12 @@ h1 .grad{background:linear-gradient(92deg,var(--cyan) 10%,var(--violet) 90%);-we
 pre.code{padding:18px 20px;overflow-x:auto;font-family:var(--mono);font-size:12.8px;line-height:1.75;color:#c6d4e8;tab-size:2}
 .code .s{color:#a5d6a7}.code .k{color:#7dd3fc}.code .n{color:#f9c784}.code .b{color:#c4a5f7}.code .c{color:#5b708f;font-style:italic}
 .codeblock.hl{border-color:rgba(34,211,238,.4);box-shadow:0 0 40px rgba(34,211,238,.07)}
+
+.install{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+.inst{font-family:var(--mono);font-size:12.5px;background:#0a0f1c;border:1px solid var(--line);border-radius:10px;padding:11px 16px;color:#c6d4e8;display:flex;gap:10px;align-items:center}
+.inst .pr{color:var(--green);font-weight:700}
+.qspanel{display:none}
+.qspanel.on{display:block;animation:fadein .35s}
 
 .pg-wrap{margin-top:44px;border:1px solid var(--line2);border-radius:20px;background:linear-gradient(180deg,rgba(16,26,46,.6),rgba(12,19,34,.9));overflow:hidden}
 .pg-top{display:flex;align-items:center;gap:14px;padding:16px 22px;border-bottom:1px solid var(--line);flex-wrap:wrap}
@@ -237,6 +243,14 @@ select.pgsel:focus{border-color:var(--violet)}
 .ct-row.jevrow .ct-cost{color:var(--cyan)}
 .note{font-size:12px;color:var(--faint);margin-top:16px;font-style:italic}
 
+.thresh{margin-top:40px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel)}
+.th-row{display:grid;grid-template-columns:170px 1fr 250px;padding:14px 22px;border-bottom:1px solid var(--line);font-size:13.5px;align-items:center;gap:14px;color:var(--dim)}
+.th-row:last-child{border-bottom:none}
+.th-head{background:rgba(255,255,255,.025);font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--faint);padding:11px 22px}
+.th-range{font-family:var(--mono);font-weight:700;font-size:13.5px}
+.th-act code{font-family:var(--mono);font-size:11.5px;color:var(--amber)}
+.th-row b{color:var(--tx)}
+
 .route-diagram{margin-top:44px;background:var(--panel);border:1px solid var(--line2);border-radius:18px;padding:34px 28px;position:relative;overflow:hidden}
 .rd-flow{display:flex;align-items:center;gap:0;flex-wrap:wrap;justify-content:center}
 .rd-node{background:var(--panel2);border:1px solid var(--line2);border-radius:13px;padding:14px 18px;text-align:center;min-width:150px}
@@ -276,13 +290,18 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .vs .bar{width:90px;height:8px;border-radius:99px;background:var(--line2);overflow:hidden}
 .vs .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--green));transition:width .5s}
 
+.uc{display:flex;flex-direction:column;gap:0}
+.uc .ico{font-size:26px;margin-bottom:10px}
+.uc .qs{font-family:var(--mono);font-size:11px;color:var(--faint);margin-top:auto;padding-top:14px;line-height:1.7}
+.uc .qs b{color:var(--cyan);font-weight:500}
+
 .pat{position:relative}
 .pat .pnum{position:absolute;top:20px;right:22px;font-family:var(--mono);font-size:34px;font-weight:700;color:rgba(139,92,246,.16)}
 
 .cta{margin:80px 0 30px;text-align:center;background:linear-gradient(160deg,rgba(139,92,246,.12),rgba(34,211,238,.08)),var(--panel);border:1px solid var(--line2);border-radius:22px;padding:64px 30px}
 .cta h2{margin:0 auto}
 footer{border-top:1px solid var(--line);margin-top:60px;padding:34px 24px 44px;text-align:center;color:var(--faint);font-size:12.5px}
-footer .fl{font-family:var(--mono);font-size:11.5px;margin-top:8px;max-width:900px;margin-left:auto;margin-right:auto}
+footer .fl{font-family:var(--mono);font-size:11.5px;margin-top:8px;max-width:920px;margin-left:auto;margin-right:auto}
 
 @media(max-width:1020px){
   .pg-body{grid-template-columns:1fr}
@@ -292,6 +311,8 @@ footer .fl{font-family:var(--mono);font-size:11.5px;margin-top:8px;max-width:900
   .calc{grid-template-columns:1fr}
   .hidden-costs{grid-template-columns:repeat(2,1fr)}
   .ct-row{grid-template-columns:190px 1fr 130px;}.ct-lat{display:none}
+  .th-row{grid-template-columns:140px 1fr;}
+  .th-act{grid-column:1/-1}
 }
 @media(max-width:680px){
   .grid2,.grid3,.grid4,.hidden-costs{grid-template-columns:1fr}
@@ -316,9 +337,11 @@ footer .fl{font-family:var(--mono);font-size:11.5px;margin-top:8px;max-width:900
     <div class="navlinks">
       <a href="#how">How it works</a>
       <a href="#primitives">Primitives</a>
+      <a href="#quickstart">Quickstart</a>
       <a href="#playground">Playground</a>
       <a href="#prompts">Real prompts</a>
       <a href="#cost">Cost math</a>
+      <a href="#confidence">Confidence</a>
       <a href="#routing">Routing &amp; savings</a>
       <a href="#patterns">Patterns</a>
     </div>
@@ -327,7 +350,7 @@ footer .fl{font-family:var(--mono);font-size:11.5px;margin-top:8px;max-width:900
 </nav>
 
 <header>
-  <div class="badge"><span class="dot"></span>System One model · decisions, not text · pricing verified Sep 21, 2026</div>
+  <div class="badge"><span class="dot"></span>System One model · decisions, not text · model pricing verified Sep 21, 2026</div>
   <h1>Stop parsing prose.<br>Start branching on <span class="grad">typed answers</span>.</h1>
   <p class="hero-sub"><b>Jev</b> is TypeSafe's flagship System One model. Send <b>state</b> + <b>typed questions</b> — get structured answers with <b>probabilities and confidence</b> your code can use directly. Then use it as a <b>~$0.0003 gate</b> in front of GPT‑5.6, Claude Opus 5, Gemini 3.1 Pro, Qwen3.8‑Max, Kimi K2.6 and DeepSeek V4 — and only pay frontier prices when a decision actually needs one.</p>
   <div class="hero-ctas">
@@ -372,7 +395,7 @@ footer .fl{font-family:var(--mono);font-size:11.5px;margin-top:8px;max-width:900
 <section id="how" class="reveal">
   <div class="kicker">The mismatch</div>
   <h2>LLMs write text for humans. Your code needs decisions.</h2>
-  <p class="lead">Every "classification" you run through a chat model is really a text-generation task you then coerce, parse, validate and retry back into a value. TypeSafe flips it: Jev is trained to output <b style="color:var(--tx)">calibrated decisions</b> — typed values with probability distributions — not sentences.</p>
+  <p class="lead">Every "classification" you run through a chat model is really a text-generation task you then coerce, parse, validate and retry back into a value. TypeSafe flips it: Jev is trained to output <b style="color:var(--tx)">calibrated decisions</b> — typed values with probability distributions — not sentences. That's the whole idea of a <b style="color:var(--tx)">System One</b> model: fast, structured judgment software can consume directly.</p>
 
   <div class="grid2">
     <div class="card" style="border-color:rgba(248,113,113,.25)">
@@ -444,6 +467,96 @@ footer .fl{font-family:var(--mono);font-size:11.5px;margin-top:8px;max-width:900
 
   <div class="callout good" style="max-width:920px">
     <b>Composite scoring:</b> instead of asking a frontier model to "rate this startup pitch" (one blob judgment), ask Jev separately about <b>market size</b>, <b>technical feasibility</b> and <b>differentiation</b> — then combine with your own formula. When priorities shift, change a coefficient in code, not a prompt.
+  </div>
+</section>
+
+<!-- ============ QUICKSTART ============ -->
+<section id="quickstart" class="reveal">
+  <div class="kicker">Quickstart · Python &amp; JavaScript SDKs</div>
+  <h2>From zero to a typed decision in one call.</h2>
+  <p class="lead">Install the SDK, set your key, send state + questions. Sync and async clients, retries with backoff, typed exceptions and rate-limit handling are built in — no validator layer to write.</p>
+
+  <div class="install">
+    <div class="inst"><span class="pr">$</span> pip install typesafe-ai</div>
+    <div class="inst"><span class="pr">$</span> npm install @typesafe/ai</div>
+    <div class="inst"><span class="pr">$</span> export TYPESAFE_API_KEY=tsk_live_…</div>
+  </div>
+
+  <div class="tabs" id="qsTabs" style="margin-top:26px">
+    <button class="tab on" data-qs="py"><i style="background:#f9c784"></i>Python</button>
+    <button class="tab" data-qs="js"><i style="background:#fbbf24"></i>JavaScript / TypeScript</button>
+  </div>
+
+  <div class="qspanel on" id="qs-py">
+    <div class="codeblock hl"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">quickstart.py — sync, async &amp; retries</span><button class="copybtn">copy</button></div><pre class="code">from typesafe import TypeSafeClient, AsyncTypeSafeClient, RetryPolicy
+
+client = TypeSafeClient(
+    retry_policy=RetryPolicy(attempts=3, backoff=0.4),   # retryable statuses + backoff headers handled
+)
+
+resp = client.evaluate(
+    state={"ticket": ticket},
+    questions=[
+        {"id": "intent", "type": "choice",
+         "question": "Primary intent of this ticket?",
+         "options": ["billing", "bug_report", "feature_request", "churn_risk"]},
+        {"id": "urgency", "type": "score",
+         "question": "How urgent is this ticket?",
+         "levels": ["1 — can wait", "2 — this week", "3 — today", "4 — hours", "5 — drop everything"]},
+        {"id": "contains_pii", "type": "noul",
+         "question": "Does this ticket contain PII?"},
+    ],
+)
+
+intent = resp.answers["intent"]           # typed object
+print(intent.choice, intent.confidence)   # "billing" 0.82
+print(resp.answers["urgency"].score)      # 4
+print(resp.usage)                         # token usage per question
+
+models = client.list_models()             # discover available System One models
+
+# async flavor for high-throughput services:
+# aclient = AsyncTypeSafeClient(); await aclient.evaluate(...)
+</pre></div>
+  </div>
+  <div class="qspanel" id="qs-js">
+    <div class="codeblock hl"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">quickstart.ts — JavaScript SDK</span><button class="copybtn">copy</button></div><pre class="code">import { TypeSafeClient } from "@typesafe/ai";
+
+const client = new TypeSafeClient();   // reads TYPESAFE_API_KEY
+
+const resp = await client.evaluate({
+  state: { ticket },
+  questions: [
+    { id: "intent", type: "choice",
+      question: "Primary intent of this ticket?",
+      options: ["billing", "bug_report", "feature_request", "churn_risk"] },
+    { id: "urgency", type: "score",
+      question: "How urgent is this ticket?",
+      levels: ["1 — can wait", "2 — this week", "3 — today", "4 — hours", "5 — drop everything"] },
+    { id: "contains_pii", type: "noul",
+      question: "Does this ticket contain PII?" },
+  ],
+});
+
+const intent = resp.answers.intent;         // fully typed (TS types ship with the SDK)
+if (intent.confidence &lt; 0.6) {
+  await escalate(ticket, "claude-opus-5");
+} else {
+  routeToQueue(intent.choice, ticket);      // "billing"
+}
+</pre></div>
+  </div>
+
+  <div class="modelchips" style="margin-top:34px;padding-top:24px">
+    <div class="mc-t">Everything in the SDK surface</div>
+    <div class="chips">
+      <span class="chip">TypeSafeClient · AsyncTypeSafeClient</span>
+      <span class="chip">RetryPolicy (attempts · backoff · retry headers)</span>
+      <span class="chip">Typed exceptions &amp; rate limits</span>
+      <span class="chip">list_models()</span>
+      <span class="chip">HTTP API reference</span>
+      <span class="chip">Agent skill for Claude Code / Codex</span>
+    </div>
   </div>
 </section>
 
@@ -634,7 +747,7 @@ class TicketDecision(BaseModel):
     contains_pii: bool
 
 resp = client.chat.completions.parse(
-    model="gpt-5.6-sol",        # or gpt-5.6-luna ($0.20/$1.20) to cut the bill 20x
+    model="gpt-5.6-sol",        # or gpt-5.6-luna ($0.20/$1.20) to cut the bill ~18x
     messages=[
         {"role": "system", "content":
             "You are a strict ticket classifier. Fill the schema using only the state provided. "
@@ -652,7 +765,7 @@ d = resp.choices[0].message.parsed   # schema-valid ✓
 #   no confidence field     # nothing to route or escalate on.
 #   ~2.5 s + per-token bill # for three enum/bool/int values.
 </pre></div>
-    <div class="callout"><b>Structured outputs fixed the schema — not the economics.</b> Sol ≈ <b>$78 / 10k decisions</b>; even budget-tier Luna is ≈ $4.3 / 10k and still ~1 s per call with zero calibrated confidence. You keep paying generation tokens and generation latency for what is fundamentally a classification.</div>
+    <div class="callout"><b>Structured outputs fixed the schema — not the economics.</b> Sol ≈ <b>$78 / 10k decisions</b>; even budget-tier Luna is ≈ $4.3 / 10k and still ~0.9 s per call with zero calibrated confidence. You keep paying generation tokens and generation latency for what is fundamentally a classification.</div>
   </div>
 
   <div class="tabpanel" id="tp-gemini">
@@ -749,6 +862,70 @@ def decide(state_json, attempts=3):
   <p class="note">Public API pricing verified Sep 21, 2026 ($/1M in/out): GPT‑5.6 Sol $4/$20 · GPT‑5.6 Luna $0.20/$1.20 · Claude Opus 5 $5/$25 (Fable 5.1: $10/$50) · Gemini 3.1 Pro $2/$12 · Gemini 3.8 Flash $0.75/$3.75 · Qwen3.8‑Max $2/$6 · Kimi K2.6 $0.60/$2.50 · DeepSeek V4 Flash $0.14/$0.28 off-peak (peak $0.30/$1.20 ≈ $5.25/10k). Jev shown at an illustrative $0.09 / 1k questions × 3 questions. Self-hosted open weights additionally carry GPU infra, serving ops and validation-engineering costs not shown.</p>
 </section>
 
+<!-- ============ CONFIDENCE ============ -->
+<section id="confidence" class="reveal">
+  <div class="kicker">Confidence &amp; state</div>
+  <h2>Confidence: the second axis your code has been missing.</h2>
+  <p class="lead">Probability tells you <b style="color:var(--tx)">what</b> the model chose and how the remaining mass is spread. Confidence tells you <b style="color:var(--tx)">how strongly the model stands behind the answer</b> — the signal that decides whether your system should act automatically, act with an audit trail, or escalate.</p>
+
+  <div class="grid2">
+    <div class="card prim pc">
+      <h3>Probability</h3><div class="ptype">distribution over the options</div>
+      <p>"billing 0.61 · churn_risk 0.24" — useful for <b>sorting</b> queues, weighing composite scores, and detecting close calls between two options.</p>
+    </div>
+    <div class="card prim pn">
+      <h3>Confidence</h3><div class="ptype">how sure the model is · 0–1</div>
+      <p>"confidence 0.82" — useful for <b>gating</b>: act, sample-audit, or escalate. Choice and Score return it directly; Noul's probability is itself the gate.</p>
+    </div>
+  </div>
+
+  <div class="thresh">
+    <div class="th-row th-head"><div>Confidence</div><div>What your system should do</div><div>Code</div></div>
+    <div class="th-row"><div class="th-range" style="color:var(--green)">≥ 0.85</div><div><b>Act automatically.</b> Route, tag, approve — fully deterministic path, no human, no frontier model.</div><div class="th-act"><code>act(answer)</code></div></div>
+    <div class="th-row"><div class="th-range" style="color:var(--amber)">0.60 – 0.84</div><div><b>Act + audit.</b> Proceed, but sample a percentage into a review queue; track drift over time.</div><div class="th-act"><code>act(answer); audit(sample=0.1)</code></div></div>
+    <div class="th-row"><div class="th-range" style="color:var(--blue)">0.30 – 0.59</div><div><b>Escalate to a frontier model.</b> Send the state to GPT‑5.6 / Opus 5 / Gemini 3.1 for deep reasoning — only now.</div><div class="th-act"><code>escalate(state, "claude-opus-5")</code></div></div>
+    <div class="th-row"><div class="th-range" style="color:var(--red)">&lt; 0.30</div><div><b>Stop. Ask a human</b> — or re-ask as smaller, better-scoped questions with clearer instructions.</div><div class="th-act"><code>queue_for_human(state)</code></div></div>
+  </div>
+
+  <div class="split" style="margin-top:26px">
+    <div>
+      <div class="sect-lbl" style="margin-top:6px">Architectural rule of thumb</div>
+      <div class="codeblock" style="margin-top:8px"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">gating.py — confidence × risk</span><button class="copybtn">copy</button></div><pre class="code">def threshold_for(risk: str) -> float:
+    return {"low": 0.60, "medium": 0.75, "high": 0.90}[risk]
+
+ans = jev.evaluate(state=s, questions=[INTENT, URGENCY, PII])
+conf = ans.answers["intent"].confidence
+risk = "high" if involves_payments(s) else "low"
+
+if conf &gt;= threshold_for(risk):
+    auto_act(ans)                       # most traffic ends here
+else:
+    escalate(s, model="gpt-5.6-sol")    # pay frontier prices ONLY for doubt
+</pre></div>
+      <div class="callout"><b>Raise the bar with risk.</b> Tagging a ticket at 0.7 confidence is fine. Refunding $4,800 at 0.7 is not — high-stakes actions get a higher threshold, which simply shifts more traffic to the escalation branch.</div>
+    </div>
+    <div>
+      <div class="sect-lbl" style="margin-top:6px">State &amp; advanced structure</div>
+      <div class="codeblock" style="margin-top:8px"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">question with instructions + structured criteria</span><button class="copybtn">copy</button></div><pre class="code">{
+  "id": "refund_ok",
+  "type": "noul",
+  "instructions": "Apply the refund policy in state.policy.
+                   Amounts above the limit always require
+                   manager sign-off.",
+  "question": "Can this refund be approved automatically?",
+  "criteria": {
+    "policy": { "window_days": 30, "limit_usd": 5000 },
+    "amount_usd": 4800,
+    "within_window": true
+  }
+}
+// instructions, Choice options, Score levels and Noul
+// criteria all accept structured JSON — not just strings.</pre></div>
+      <div class="callout good"><b>Structure the state, keep it relevant.</b> Send the fields a knowledgeable person would need — customer tier, amounts, history, policy — as clean JSON. Every question sees the same state; each is judged in isolation, so extra questions cost almost nothing.</div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ ROUTING ============ -->
 <section id="routing" class="reveal">
   <div class="kicker">Confidence-gated routing · the killer pattern</div>
@@ -818,6 +995,20 @@ else:
   </div>
 </section>
 
+<!-- ============ USE CASES ============ -->
+<section id="usecases" class="reveal">
+  <div class="kicker">Example use cases</div>
+  <h2>Narrow decisions, everywhere a judgment blocks your code.</h2>
+  <div class="grid3">
+    <div class="card uc"><div class="ico">🎫</div><h3>Support triage &amp; routing</h3><p>Classify intent, urgency and PII on every ticket in ~172 ms. Auto-route 88%, escalate churn-risk and low-confidence cases.</p><div class="qs"><b>Choice</b> intent · <b>Score</b> urgency · <b>Noul</b> contains_pii</div></div>
+    <div class="card uc"><div class="ico">🧑‍💻</div><h3>Code review / PR gating</h3><p>Risk-level every PR before merge. Block critical-risk diffs automatically; ask humans only when confidence is low.</p><div class="qs"><b>Choice</b> risk · <b>Noul</b> tests_adequate · <b>Score</b> maintainability</div></div>
+    <div class="card uc"><div class="ico">📈</div><h3>Lead scoring &amp; sales routing</h3><p>Segment and score every inbound lead the moment it lands. Sales calls the sales-ready ones first — sorted by fit probability.</p><div class="qs"><b>Choice</b> segment · <b>Score</b> icp_fit · <b>Noul</b> sales_ready</div></div>
+    <div class="card uc"><div class="ico">🏠</div><h3>Smart home assistant <span class="tagline tg-good" style="margin-left:4px">docs demo</span></h3><p>Evaluate each voice request before execution: which device, which action, is it safe? Deterministic execution in ~200 ms — no full LLM round-trip per command.</p><div class="qs"><b>Choice</b> device · <b>Choice</b> action · <b>Noul</b> is_safe</div></div>
+    <div class="card uc"><div class="ico">🛡️</div><h3>Fraud &amp; chargeback screening</h3><p>Score every transaction against rubric levels inline. High-risk + high-confidence → auto-block; ambiguous → frontier model or human reviewer.</p><div class="qs"><b>Score</b> fraud_risk · <b>Noul</b> matches_known_pattern</div></div>
+    <div class="card uc"><div class="ico">🧹</div><h3>Content moderation queues</h3><p>Fan out a dozen policy questions per item in one call (speculative fan-out). Moderators only ever see the low-confidence residue.</p><div class="qs"><b>Noul</b> × policy rules · <b>Choice</b> violation_category</div></div>
+  </div>
+</section>
+
 <!-- ============ PATTERNS ============ -->
 <section id="patterns" class="reveal">
   <div class="kicker">Architectural patterns</div>
@@ -832,9 +1023,9 @@ else:
   <div class="cta reveal">
     <div class="kicker" style="justify-content:center">Next steps</div>
     <h2>Your first decision is one API call away.</h2>
-    <p class="lead" style="margin:14px auto 30px;text-align:center">Quick Start · AI Primer · Primitives · Confidence · Patterns — everything is in the docs.</p>
+    <p class="lead" style="margin:14px auto 30px;text-align:center">Quick Start · AI Primer · Primitives · State · Confidence · Patterns · Demos · Python &amp; JS SDKs · API Reference — everything is in the docs.</p>
     <div class="hero-ctas" style="margin-top:0">
-      <a class="btn btn-p" href="#playground">↑ Back to the playground</a>
+      <a class="btn btn-p" href="#quickstart">↑ Jump to the quickstart</a>
       <a class="btn btn-g" href="https://docs.typesafe.ai" target="_blank" rel="noopener">docs.typesafe.ai ↗</a>
     </div>
   </div>
@@ -844,7 +1035,7 @@ else:
 
 <footer>
   <div class="logo" style="justify-content:center"><span class="mark">TS</span>TypeSafe — System One models for software decisions</div>
-  <div class="fl">Jev · Choice · Score · Noul · confidence-gated routing — concept site built from docs.typesafe.ai. Model lineup &amp; per-token pricing reflect public sources as of Sep 21, 2026 (GPT‑5.6, Claude Opus 5 / Fable 5.1, Gemini 3.1 Pro / 3.8 Flash, Qwen3.8‑Max, Kimi K2.6, DeepSeek V4). Jev pricing illustrative. Playground responses are simulated.</div>
+  <div class="fl">Jev · Choice · Score · Noul · State · Confidence · Patterns · SDKs — concept site built from docs.typesafe.ai. Model lineup &amp; per-token pricing reflect public sources as of Sep 21, 2026 (GPT‑5.6 Sol/Luna, Claude Opus 5 / Fable 5.1, Gemini 3.1 Pro / 3.8 Flash, Qwen3.8‑Max, Kimi K2.6, DeepSeek V4 Flash). Jev pricing illustrative. Playground responses are simulated.</div>
 </footer>
 
 <script>
@@ -966,7 +1157,7 @@ function fmtInt(v){ return new Intl.NumberFormat('en-US').format(Math.round(v));
 function highlightEl(el){
   const html = el.innerHTML;
   const re = /("(?:[^"\\]|\\.)*?"|'(?:[^'\\]|\\.)*?')|(#[^\n]*)|(\/\/[^\n]*)|\b(true|false|null|True|False|None|import|from|def|return|await|async|try|except|if|elif|else|for|in|continue|raise|class|const|let|new|with|as|assert|not|and|or)\b|(\b\d+\.?\d*\b)/g;
-  el.innerHTML = html.replace(re, (m, str, cmt, cmt2, kw, num, off) => {
+  el.innerHTML = html.replace(re, function(m, str, cmt, cmt2, kw, num, off){
     if (cmt || cmt2) return '<span class="c">'+m+'</span>';
     if (kw) return '<span class="b">'+m+'</span>';
     if (num) return '<span class="n">'+m+'</span>';
@@ -982,12 +1173,12 @@ function setCode(el, text){
   el.innerHTML = esc(text);
   highlightEl(el);
 }
-document.addEventListener('click', e => {
+document.addEventListener('click', function(e){
   if (e.target.classList.contains('copybtn')){
     const pre = e.target.closest('.codeblock').querySelector('pre.code');
-    navigator.clipboard.writeText(pre.innerText).then(()=>{
+    navigator.clipboard.writeText(pre.innerText).then(function(){
       e.target.textContent='copied ✓';
-      setTimeout(()=>e.target.textContent='copy', 1400);
+      setTimeout(function(){ e.target.textContent='copy'; }, 1400);
     });
   }
 });
@@ -995,27 +1186,27 @@ document.addEventListener('click', e => {
 /* =========================================================
    REVEAL / PROGRESS / NAV / COUNTERS
 ========================================================= */
-const revealObs = new IntersectionObserver(entries=>{
-  entries.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('visible'); revealObs.unobserve(en.target); } });
+const revealObs = new IntersectionObserver(function(entries){
+  entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('visible'); revealObs.unobserve(en.target); } });
 },{threshold:0.08});
-$$('.reveal').forEach(el=>revealObs.observe(el));
+$$('.reveal').forEach(function(el){ revealObs.observe(el); });
 
-window.addEventListener('scroll', ()=>{
+window.addEventListener('scroll', function(){
   const h = document.documentElement;
   $('#progress').style.width = (h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
 });
 
-const navObs = new IntersectionObserver(entries=>{
-  entries.forEach(en=>{
+const navObs = new IntersectionObserver(function(entries){
+  entries.forEach(function(en){
     if(en.isIntersecting){
-      $$('.navlinks a').forEach(a=>a.classList.toggle('active', a.getAttribute('href')==='#'+en.target.id));
+      $$('.navlinks a').forEach(function(a){ a.classList.toggle('active', a.getAttribute('href')==='#'+en.target.id); });
     }
   });
 },{rootMargin:'-30% 0px -60% 0px'});
-$$('section[id]').forEach(s=>navObs.observe(s));
+$$('section[id]').forEach(function(s){ navObs.observe(s); });
 
-const countObs = new IntersectionObserver(entries=>{
-  entries.forEach(en=>{
+const countObs = new IntersectionObserver(function(entries){
+  entries.forEach(function(en){
     if(!en.isIntersecting) return;
     const el = en.target, target = parseFloat(el.dataset.count);
     countObs.unobserve(el);
@@ -1028,7 +1219,19 @@ const countObs = new IntersectionObserver(entries=>{
     requestAnimationFrame(tick);
   });
 },{threshold:0.6});
-$$('[data-count]').forEach(el=>countObs.observe(el));
+$$('[data-count]').forEach(function(el){ countObs.observe(el); });
+
+/* =========================================================
+   QUICKSTART TABS
+========================================================= */
+$$('#qsTabs .tab').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    $$('#qsTabs .tab').forEach(function(b){ b.classList.remove('on'); });
+    btn.classList.add('on');
+    $$('.qspanel').forEach(function(p){ p.classList.remove('on'); });
+    $('#qs-'+btn.dataset.qs).classList.add('on');
+  });
+});
 
 /* =========================================================
    COST TABLE
@@ -1036,13 +1239,14 @@ $$('[data-count]').forEach(el=>countObs.observe(el));
 (function buildCostTable(){
   const table = $('#costTable');
   const order = ['jev','opus5','gptsol','gempro','qwen','gemflash','kimi','gptluna','deepseek'];
-  const rows = order.map(k=>{
+  const rows = order.map(function(k){
     const m = MODEL_PRICING[k];
     const cost = (k==='jev' ? jevCostPerReq() : llmCostPerReq(m, SIMPLE_IN, SIMPLE_OUT)) * 10000;
-    return {key:k, cost, latency:m.latency};
+    return {key:k, cost:cost, latency:m.latency};
   });
-  const max = Math.max.apply(null, rows.map(r=>r.cost));
-  rows.forEach(r=>{
+  let max = 0;
+  rows.forEach(function(r){ if(r.cost>max) max=r.cost; });
+  rows.forEach(function(r){
     const m = MODEL_PRICING[r.key];
     const div = document.createElement('div');
     div.className = 'ct-row' + (r.key==='jev' ? ' jevrow' : '');
@@ -1053,8 +1257,8 @@ $$('[data-count]').forEach(el=>countObs.observe(el));
       '<div class="ct-lat">'+r.latency+'</div>';
     table.appendChild(div);
   });
-  const cObs = new IntersectionObserver(es=>{
-    es.forEach(en=>{ if(en.isIntersecting){ $$('#costTable .ct-fill').forEach(f=>{ f.style.width=f.dataset.w+'%'; }); cObs.disconnect(); } });
+  const cObs = new IntersectionObserver(function(es){
+    es.forEach(function(en){ if(en.isIntersecting){ $$('#costTable .ct-fill').forEach(function(f){ f.style.width=f.dataset.w+'%'; }); cObs.disconnect(); } });
   },{threshold:0.25});
   cObs.observe(table);
 })();
@@ -1064,7 +1268,7 @@ $$('[data-count]').forEach(el=>countObs.observe(el));
 ========================================================= */
 (function calculator(){
   const sel = $('#calcModel');
-  ['opus5','gptsol','gempro','qwen','gemflash','kimi','gptluna','deepseek'].forEach(k=>{
+  ['opus5','gptsol','gempro','qwen','gemflash','kimi','gptluna','deepseek'].forEach(function(k){
     const o = document.createElement('option'); o.value=k; o.textContent=MODEL_PRICING[k].name; sel.appendChild(o);
   });
   sel.value='opus5';
@@ -1109,11 +1313,11 @@ $$('[data-count]').forEach(el=>countObs.observe(el));
 /* =========================================================
    PROMPT TABS
 ========================================================= */
-$$('#promptTabs .tab').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    $$('#promptTabs .tab').forEach(b=>b.classList.remove('on'));
+$$('#promptTabs .tab').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    $$('#promptTabs .tab').forEach(function(b){ b.classList.remove('on'); });
     btn.classList.add('on');
-    $$('.tabpanel').forEach(p=>p.classList.remove('on'));
+    $$('.tabpanel').forEach(function(p){ p.classList.remove('on'); });
     $('#tp-'+btn.dataset.tab).classList.add('on');
   });
 });
@@ -1124,34 +1328,37 @@ $$('#promptTabs .tab').forEach(btn=>{
 const PG = { scen:'triage', mode:'jev', attempts:{} };
 let pgTimers = [], pgRunning = false;
 
-function pgClearTimers(){ pgTimers.forEach(t=>{clearTimeout(t);clearInterval(t);}); pgTimers=[]; }
+function pgClearTimers(){ pgTimers.forEach(function(t){ clearTimeout(t); clearInterval(t); }); pgTimers=[]; }
 function pgLater(fn, ms){ const t=setTimeout(fn,ms); pgTimers.push(t); return t; }
 
 (function initPlaygroundModelSelect(){
   const pgModelSel=$('#pgModel');
-  ['opus5','gptsol','gempro','qwen','gemflash','kimi','gptluna','deepseek'].forEach(k=>{
+  ['opus5','gptsol','gempro','qwen','gemflash','kimi','gptluna','deepseek'].forEach(function(k){
     const o=document.createElement('option'); o.value=k; o.textContent=MODEL_PRICING[k].name; pgModelSel.appendChild(o);
   });
   pgModelSel.value='opus5';
 })();
 
 function statBar(items){
-  return '<div class="out-stats">'+items.map(it=>
-    '<div class="ostat"><div class="v '+(it.cls||'')+'">'+it.v+'</div><div class="k">'+it.k+'</div></div>').join('')+'</div>';
+  return '<div class="out-stats">'+items.map(function(it){
+    return '<div class="ostat"><div class="v '+(it.cls||'')+'">'+it.v+'</div><div class="k">'+it.k+'</div></div>';
+  }).join('')+'</div>';
 }
 function confBadge(c){ return c ? '<span class="conf '+c.label+'">confidence '+c.v.toFixed(2)+'</span>' : ''; }
 
 function renderAnswerCard(a){
   let body='';
   if(a.type==='choice'){
-    const sorted=a.probs.slice().sort((x,y)=>y[1]-x[1]);
-    body='<div class="pbars">'+sorted.map((p,i)=>
-      '<div class="pbar'+(i===0?' win':'')+'"><span class="pl">'+p[0]+'</span><span class="pt"><span class="pf" data-w="'+(p[1]*100)+'"></span></span><span class="pv">'+p[1].toFixed(2)+'</span></div>').join('')+'</div>';
+    const sorted=a.probs.slice().sort(function(x,y){ return y[1]-x[1]; });
+    body='<div class="pbars">'+sorted.map(function(p,i){
+      return '<div class="pbar'+(i===0?' win':'')+'"><span class="pl">'+p[0]+'</span><span class="pt"><span class="pf" data-w="'+(p[1]*100)+'"></span></span><span class="pv">'+p[1].toFixed(2)+'</span></div>';
+    }).join('')+'</div>';
   } else if(a.type==='score'){
-    const sorted=a.probs.slice().sort((x,y)=>parseInt(y[0],10)-parseInt(x[0],10));
-    const maxP=Math.max.apply(null, sorted.map(p=>p[1]));
-    body='<div class="pbars">'+sorted.map(p=>
-      '<div class="pbar'+(p[1]===maxP?' win':'')+'"><span class="pl">level '+p[0]+'</span><span class="pt"><span class="pf" data-w="'+(p[1]*100)+'"></span></span><span class="pv">'+p[1].toFixed(2)+'</span></div>').join('')+'</div>';
+    const sorted=a.probs.slice().sort(function(x,y){ return parseInt(y[0],10)-parseInt(x[0],10); });
+    let maxP=0; sorted.forEach(function(p){ if(p[1]>maxP) maxP=p[1]; });
+    body='<div class="pbars">'+sorted.map(function(p){
+      return '<div class="pbar'+(p[1]===maxP?' win':'')+'"><span class="pl">level '+p[0]+'</span><span class="pt"><span class="pf" data-w="'+(p[1]*100)+'"></span></span><span class="pv">'+p[1].toFixed(2)+'</span></div>';
+    }).join('')+'</div>';
   } else {
     body='<div class="noul-wrap"><div class="noul-track"><div class="noul-mark" data-l="'+(a.value*100)+'" style="left:0%"></div></div>'+
       '<div class="noul-lbl"><span>0 — false</span><span style="color:var(--cyan);font-weight:700">P(yes) = '+a.value.toFixed(2)+'</span><span>1 — true</span></div></div>';
@@ -1193,7 +1400,7 @@ function runJev(){
   out.innerHTML=
     '<div class="out-head"><span class="pill" style="color:var(--cyan);border-color:rgba(34,211,238,.4)">jev-1</span> evaluating '+sc.questions.length+' questions in parallel · in isolation<span class="timer" id="pgTimer">0 ms</span></div>'+
     '<div class="logline"><span class="inf">→</span> POST /v1/evaluate · one request · typed questions, zero prose</div>'+
-    '<div id="pgCards">'+sc.jev.map(()=>'<div class="skel"></div>').join('')+'</div><div id="pgFoot"></div>';
+    '<div id="pgCards">'+sc.jev.map(function(){ return '<div class="skel"></div>'; }).join('')+'</div><div id="pgFoot"></div>';
   const timerEl=$('#pgTimer');
   const iv=setInterval(function(){ timerEl.textContent=Math.round(performance.now()-t0)+' ms'; },40);
   pgTimers.push(iv);
@@ -1334,7 +1541,7 @@ $('#modeLlm').addEventListener('click', function(){
 $('#scenTabs').addEventListener('click', function(e){
   const b=e.target.closest('.scen-tab');
   if(!b||pgRunning) return;
-  $$('.scen-tab').forEach(x=>x.classList.remove('on'));
+  $$('.scen-tab').forEach(function(x){ x.classList.remove('on'); });
   b.classList.add('on');
   PG.scen=b.dataset.scen;
   renderStatic();
