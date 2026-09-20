@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TypeSafe · Jev — Decisions, not text | A $0.0003 gate in front of GPT‑5.6, Claude Opus 5, Gemini 3.1, Qwen3.8, Kimi K2.6 & DeepSeek V4</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.2.5/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.2.5/500.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.2.5/600.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.2.5/700.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.2.5/800.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.2.5/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.2.5/500.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.2.5/700.css">
+<style>
+:root{
+  --bg:#070b14; --panel:#0c1322; --panel2:#101a2e; --line:#1b2942; --line2:#24365a;
+  --tx:#dbe6f5; --dim:#8aa0bd; --faint:#5b708f;
+  --cyan:#22d3ee; --violet:#8b5cf6; --green:#34d399; --amber:#fbbf24; --red:#f87171; --blue:#60a5fa;
+  --mono:'JetBrains Mono',monospace; --sans:'Inter',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:var(--sans);line-height:1.6;overflow-x:hidden}
+::selection{background:rgba(34,211,238,.3)}
+a{color:var(--cyan);text-decoration:none}
+.bgfx{position:fixed;inset:0;z-index:-2;background:
+  radial-gradient(900px 500px at 80% -5%, rgba(139,92,246,.14), transparent 60%),
+  radial-gradient(800px 500px at 10% 0%, rgba(34,211,238,.10), transparent 55%),
+  radial-gradient(1000px 700px at 50% 110%, rgba(34,211,238,.06), transparent 60%),var(--bg)}
+.bggrid{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(56,86,140,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(56,86,140,.07) 1px,transparent 1px);
+  background-size:44px 44px;
+  -webkit-mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,#000 30%,transparent 75%);
+  mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,#000 30%,transparent 75%)}
+#progress{position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,var(--cyan),var(--violet));z-index:200;transition:width .1s linear}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(7,11,20,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.navin{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:26px;padding:0 24px;height:60px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:16px;letter-spacing:-.02em;color:#fff;white-space:nowrap}
+.logo .mark{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--cyan),var(--violet));display:grid;place-items:center;font-family:var(--mono);font-weight:700;font-size:13px;color:#04121a}
+.logo small{font-family:var(--mono);font-weight:500;font-size:10px;color:var(--cyan);border:1px solid rgba(34,211,238,.35);padding:1px 6px;border-radius:99px;margin-left:2px}
+.navlinks{display:flex;gap:4px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.navlinks::-webkit-scrollbar{display:none}
+.navlinks a{color:var(--dim);font-size:13px;font-weight:500;padding:7px 12px;border-radius:8px;white-space:nowrap;transition:.2s}
+.navlinks a:hover{color:#fff;background:rgba(255,255,255,.05)}
+.navlinks a.active{color:var(--cyan);background:rgba(34,211,238,.08)}
+.navcta{font-size:13px;font-weight:600;padding:8px 16px;border-radius:9px;background:linear-gradient(135deg,var(--cyan),#0ea5c4);color:#04121a;white-space:nowrap;transition:.2s}
+.navcta:hover{filter:brightness(1.12);transform:translateY(-1px)}
+
+main{max-width:1200px;margin:0 auto;padding:0 24px}
+section{padding:84px 0 24px}
+.kicker{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.kicker::before{content:'';width:26px;height:1px;background:var(--cyan)}
+h2{font-size:clamp(26px,3.6vw,40px);font-weight:800;letter-spacing:-.03em;line-height:1.15;color:#fff;max-width:780px}
+.lead{color:var(--dim);font-size:16.5px;max-width:740px;margin-top:14px}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:none}
+
+header{max-width:1200px;margin:0 auto;padding:88px 24px 30px;text-align:center}
+.badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;color:var(--dim);border:1px solid var(--line2);background:var(--panel);padding:6px 14px;border-radius:99px;margin-bottom:26px}
+.badge .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.4}}
+h1{font-size:clamp(36px,6vw,64px);font-weight:800;letter-spacing:-.035em;line-height:1.05;color:#fff;max-width:920px;margin:0 auto}
+h1 .grad{background:linear-gradient(92deg,var(--cyan) 10%,var(--violet) 90%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-sub{color:var(--dim);font-size:clamp(15px,1.7vw,18px);max-width:760px;margin:22px auto 0}
+.hero-sub b{color:var(--tx);font-weight:600}
+.hero-ctas{display:flex;gap:14px;justify-content:center;margin-top:34px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:9px;font-size:15px;font-weight:600;padding:13px 26px;border-radius:12px;cursor:pointer;border:none;transition:.2s;font-family:var(--sans)}
+.btn-p{background:linear-gradient(135deg,var(--cyan),#0ea5c4);color:#04121a;box-shadow:0 8px 30px rgba(34,211,238,.25)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(34,211,238,.35)}
+.btn-g{background:var(--panel);color:var(--tx);border:1px solid var(--line2)}
+.btn-g:hover{border-color:var(--cyan);color:#fff;transform:translateY(-2px)}
+.hero-stats{display:flex;gap:0;justify-content:center;margin:52px auto 0;flex-wrap:wrap;max-width:900px}
+.hstat{flex:1;min-width:180px;padding:18px 22px;border-right:1px solid var(--line)}
+.hstat:last-child{border-right:none}
+.hstat .v{font-family:var(--mono);font-size:25px;font-weight:700;color:#fff}
+.hstat .v span{color:var(--cyan)}
+.hstat .k{font-size:12.5px;color:var(--faint);margin-top:3px}
+
+.flow{display:flex;align-items:stretch;justify-content:center;gap:0;margin:56px auto 0;flex-wrap:wrap}
+.fnode{background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:16px 20px;max-width:230px;text-align:left;position:relative}
+.fnode .ft{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+.fnode .fb{font-size:13.5px;color:var(--tx);font-weight:500}
+.fnode.core{border-color:rgba(139,92,246,.55);background:linear-gradient(160deg,rgba(139,92,246,.14),rgba(34,211,238,.07)),var(--panel);max-width:290px;box-shadow:0 0 50px rgba(139,92,246,.14)}
+.fnode.code{border-color:rgba(52,211,153,.4)}
+.farrow{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 12px;min-width:104px}
+.farrow .lbl{font-family:var(--mono);font-size:10.5px;color:var(--cyan);margin-bottom:5px;white-space:nowrap}
+.farrow .ln{width:100%;height:2px;background:repeating-linear-gradient(90deg,var(--cyan) 0 7px,transparent 7px 13px);position:relative;animation:dash 1.2s linear infinite}
+@keyframes dash{to{background-position-x:20px}}
+.farrow .ln::after{content:'';position:absolute;right:-2px;top:-4px;border:5px solid transparent;border-left:7px solid var(--cyan)}
+.modelchips{margin-top:58px;padding-top:30px;border-top:1px solid var(--line)}
+.modelchips .mc-t{font-family:var(--mono);font-size:11.5px;color:var(--faint);letter-spacing:.08em;text-transform:uppercase;margin-bottom:16px}
+.chips{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line2);border-radius:99px;padding:7px 15px;font-size:13px;font-weight:500;color:var(--dim);transition:.2s}
+.chip:hover{border-color:var(--cyan);color:#fff;transform:translateY(-2px)}
+.chip i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.chip .p{font-family:var(--mono);font-size:10.5px;color:var(--faint)}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:44px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:44px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:44px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:26px;transition:.25s}
+.card:hover{border-color:var(--line2);transform:translateY(-3px)}
+.card h3{font-size:17.5px;font-weight:700;color:#fff;letter-spacing:-.01em;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.card p{color:var(--dim);font-size:14px;margin-top:10px}
+.tagline{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:6px;font-weight:500}
+.tg-bad{background:rgba(248,113,113,.1);color:var(--red);border:1px solid rgba(248,113,113,.3)}
+.tg-good{background:rgba(52,211,153,.1);color:var(--green);border:1px solid rgba(52,211,153,.3)}
+.steps{list-style:none;margin-top:16px}
+.steps li{display:flex;gap:12px;padding:9px 0;font-size:14px;color:var(--dim);border-bottom:1px dashed var(--line)}
+.steps li:last-child{border-bottom:none}
+.steps .n{font-family:var(--mono);font-size:11px;min-width:22px;height:22px;border-radius:6px;display:grid;place-items:center;flex-shrink:0;margin-top:1px}
+.steps.bad .n{background:rgba(248,113,113,.12);color:var(--red)}
+.steps.good .n{background:rgba(52,211,153,.12);color:var(--green)}
+.steps li b{color:var(--tx);font-weight:600}
+.steps li code{font-family:var(--mono);font-size:12.5px;color:var(--amber)}
+
+.prim{position:relative;overflow:hidden}
+.prim::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.prim.pc::before{background:linear-gradient(90deg,var(--cyan),transparent)}
+.prim.ps::before{background:linear-gradient(90deg,var(--violet),transparent)}
+.prim.pn::before{background:linear-gradient(90deg,var(--green),transparent)}
+.prim .ptype{font-family:var(--mono);font-size:11px;color:var(--faint);margin-top:2px}
+.returns{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}
+.ret{font-family:var(--mono);font-size:11px;background:var(--panel2);border:1px solid var(--line2);color:var(--tx);padding:3px 9px;border-radius:6px}
+
+.codeblock{background:#0a0f1c;border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:20px;position:relative}
+.cb-head{display:flex;align-items:center;gap:8px;padding:10px 16px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.02)}
+.cb-head .dots{display:flex;gap:5px}
+.cb-head .dots i{width:10px;height:10px;border-radius:50%;background:#22314d}
+.cb-head .dots i:first-child{background:#3a2a35}.cb-head .dots i:nth-child(2){background:#3a3528}.cb-head .dots i:nth-child(3){background:#253a33}
+.cb-head .fname{font-family:var(--mono);font-size:11.5px;color:var(--faint);margin-left:6px}
+.copybtn{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--dim);background:var(--panel2);border:1px solid var(--line2);border-radius:6px;padding:3px 10px;cursor:pointer;transition:.2s}
+.copybtn:hover{color:var(--cyan);border-color:var(--cyan)}
+pre.code{padding:18px 20px;overflow-x:auto;font-family:var(--mono);font-size:12.8px;line-height:1.75;color:#c6d4e8;tab-size:2}
+.code .s{color:#a5d6a7}.code .k{color:#7dd3fc}.code .n{color:#f9c784}.code .b{color:#c4a5f7}.code .c{color:#5b708f;font-style:italic}
+.codeblock.hl{border-color:rgba(34,211,238,.4);box-shadow:0 0 40px rgba(34,211,238,.07)}
+
+.pg-wrap{margin-top:44px;border:1px solid var(--line2);border-radius:20px;background:linear-gradient(180deg,rgba(16,26,46,.6),rgba(12,19,34,.9));overflow:hidden}
+.pg-top{display:flex;align-items:center;gap:14px;padding:16px 22px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.pg-top .pg-title{font-weight:700;font-size:15px;color:#fff;display:flex;align-items:center;gap:9px}
+.pg-top .pg-title .dot{width:8px;height:8px;background:var(--green);border-radius:50%;box-shadow:0 0 8px var(--green)}
+.scen-tabs{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
+.scen-tab{font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:9px;border:1px solid var(--line2);background:var(--panel);color:var(--dim);cursor:pointer;transition:.2s;font-family:var(--sans)}
+.scen-tab:hover{color:#fff}
+.scen-tab.on{background:rgba(34,211,238,.12);border-color:var(--cyan);color:var(--cyan)}
+.pg-body{display:grid;grid-template-columns:minmax(340px,5fr) 7fr;gap:0}
+.pg-left{padding:22px;border-right:1px solid var(--line);min-width:0}
+.pg-right{padding:22px;min-width:0;background:rgba(4,8,16,.35)}
+.sect-lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin:0 0 8px}
+.pg-controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:18px 0}
+.mode-sw{display:flex;background:var(--panel2);border:1px solid var(--line2);border-radius:10px;padding:3px;gap:3px}
+.mode-sw button{font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:8px;border:none;background:transparent;color:var(--dim);cursor:pointer;font-family:var(--sans);transition:.2s;white-space:nowrap}
+.mode-sw button.on-j{background:linear-gradient(135deg,rgba(34,211,238,.9),rgba(14,165,196,.9));color:#04121a}
+.mode-sw button.on-l{background:linear-gradient(135deg,rgba(139,92,246,.9),rgba(124,58,237,.9));color:#fff}
+select.pgsel{font-family:var(--sans);font-size:12.5px;font-weight:600;color:var(--tx);background:var(--panel2);border:1px solid var(--line2);border-radius:10px;padding:9px 12px;cursor:pointer;outline:none}
+select.pgsel:focus{border-color:var(--violet)}
+.runbtn{margin-left:auto;font-size:13.5px;font-weight:700;padding:10px 22px;border-radius:10px;border:none;cursor:pointer;font-family:var(--sans);background:linear-gradient(135deg,var(--cyan),#0ea5c4);color:#04121a;transition:.2s;display:inline-flex;align-items:center;gap:8px}
+.runbtn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 24px rgba(34,211,238,.3)}
+.runbtn:disabled{opacity:.5;cursor:not-allowed}
+.pg-out{min-height:420px}
+.out-head{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;color:var(--dim);border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:16px;flex-wrap:wrap}
+.out-head .pill{border:1px solid var(--line2);background:var(--panel2);padding:2px 10px;border-radius:99px;font-size:11px}
+.out-head .timer{margin-left:auto;color:var(--cyan);font-weight:700}
+.ans-card{background:var(--panel);border:1px solid var(--line2);border-radius:13px;padding:16px 18px;margin-bottom:12px;opacity:0;transform:translateY(10px);transition:.45s}
+.ans-card.in{opacity:1;transform:none}
+.ans-card .ah{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ans-card .qid{font-family:var(--mono);font-size:12px;color:var(--dim)}
+.ans-card .qtype{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:5px;text-transform:uppercase;letter-spacing:.08em}
+.qt-choice{background:rgba(34,211,238,.12);color:var(--cyan)}
+.qt-score{background:rgba(139,92,246,.14);color:#b79bff}
+.qt-noul{background:rgba(52,211,153,.12);color:var(--green)}
+.ans-card .val{margin-left:auto;font-weight:800;font-size:15px;color:#fff;font-family:var(--mono)}
+.conf{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:5px;border:1px solid}
+.conf.high{color:var(--green);border-color:rgba(52,211,153,.4);background:rgba(52,211,153,.08)}
+.conf.med{color:var(--amber);border-color:rgba(251,191,36,.4);background:rgba(251,191,36,.08)}
+.conf.low{color:var(--red);border-color:rgba(248,113,113,.4);background:rgba(248,113,113,.08)}
+.pbars{margin-top:13px;display:grid;gap:7px}
+.pbar{display:grid;grid-template-columns:130px 1fr 46px;gap:10px;align-items:center;font-family:var(--mono);font-size:11.5px}
+.pbar .pl{color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pbar .pt{height:7px;background:var(--panel2);border-radius:99px;overflow:hidden}
+.pbar .pf{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--cyan),var(--violet));transition:width .8s cubic-bezier(.22,1,.36,1)}
+.pbar.win .pf{background:linear-gradient(90deg,var(--green),#10b981)}
+.pbar .pv{color:var(--tx);text-align:right;font-weight:500}
+.noul-wrap{margin-top:13px}
+.noul-track{height:10px;background:linear-gradient(90deg,rgba(248,113,113,.35),rgba(251,191,36,.3),rgba(52,211,153,.4));border-radius:99px;position:relative}
+.noul-mark{position:absolute;top:-5px;width:3px;height:20px;background:#fff;border-radius:2px;box-shadow:0 0 10px rgba(255,255,255,.8);transition:left 1s cubic-bezier(.22,1,.36,1)}
+.noul-lbl{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10.5px;color:var(--faint);margin-top:7px}
+.skel{height:74px;border-radius:13px;background:linear-gradient(100deg,var(--panel) 40%,var(--panel2) 50%,var(--panel) 60%);background-size:200% 100%;animation:shim 1.2s infinite;margin-bottom:12px;border:1px solid var(--line)}
+@keyframes shim{to{background-position-x:-200%}}
+.streambox{font-family:var(--mono);font-size:12.5px;background:#0a0f1c;border:1px solid var(--line);border-radius:12px;padding:15px 17px;white-space:pre-wrap;word-break:break-word;color:#c6d4e8;min-height:60px;line-height:1.7}
+.streambox .cursor{display:inline-block;width:8px;height:15px;background:var(--cyan);vertical-align:-2px;animation:blink .8s infinite}
+@keyframes blink{50%{opacity:0}}
+.logline{font-family:var(--mono);font-size:12px;padding:5px 0;color:var(--dim);display:flex;gap:9px;align-items:baseline;opacity:0;animation:fadein .3s forwards}
+@keyframes fadein{to{opacity:1}}
+.logline .ok{color:var(--green)}.logline .er{color:var(--red)}.logline .wr{color:var(--amber)}.logline .inf{color:var(--cyan)}
+.out-stats{display:flex;gap:0;margin-top:18px;border:1px solid var(--line);border-radius:12px;overflow:hidden;flex-wrap:wrap;background:var(--panel)}
+.ostat{flex:1;min-width:110px;padding:12px 16px;border-right:1px solid var(--line)}
+.ostat:last-child{border-right:none}
+.ostat .v{font-family:var(--mono);font-size:16px;font-weight:700;color:#fff}
+.ostat .v.g{color:var(--green)}.ostat .v.c{color:var(--cyan)}.ostat .v.r{color:var(--red)}
+.ostat .k{font-size:10.5px;color:var(--faint);font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
+.verdict{margin-top:14px;font-size:12.5px;color:var(--dim);border-left:2px solid var(--violet);padding:4px 0 4px 14px}
+.verdict b{color:var(--tx)}
+
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:36px}
+.tab{font-size:13px;font-weight:600;padding:9px 18px;border-radius:10px;border:1px solid var(--line2);background:var(--panel);color:var(--dim);cursor:pointer;transition:.2s;font-family:var(--sans);display:inline-flex;gap:8px;align-items:center}
+.tab i{width:8px;height:8px;border-radius:50%}
+.tab:hover{color:#fff}
+.tab.on{border-color:var(--cyan);color:#fff;background:rgba(34,211,238,.1)}
+.tabpanel{display:none}
+.tabpanel.on{display:block;animation:fadein .35s}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.callout{border:1px solid rgba(251,191,36,.3);background:rgba(251,191,36,.05);border-radius:13px;padding:16px 18px;margin-top:18px;font-size:13.5px;color:var(--dim)}
+.callout b{color:var(--amber)}
+.callout.good{border-color:rgba(52,211,153,.3);background:rgba(52,211,153,.05)}
+.callout.good b{color:var(--green)}
+.hidden-costs{margin-top:30px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.hcost{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:17px 19px;font-size:13px;color:var(--dim)}
+.hcost b{display:flex;gap:8px;align-items:center;color:var(--tx);font-size:13.5px;margin-bottom:6px}
+.hcost b::before{content:'✕';color:var(--red);font-family:var(--mono);font-size:12px}
+
+.cost-table{margin-top:44px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--panel)}
+.ct-row{display:grid;grid-template-columns:230px 1fr 160px 120px;gap:16px;padding:16px 22px;border-bottom:1px solid var(--line);align-items:center}
+.ct-row:last-child{border-bottom:none}
+.ct-head{background:rgba(255,255,255,.025);font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);padding:12px 22px}
+.ct-model{display:flex;align-items:center;gap:11px;font-weight:600;font-size:14px;color:var(--tx)}
+.ct-model i{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.ct-model .fam{font-family:var(--mono);font-size:10.5px;color:var(--faint);font-weight:400;display:block}
+.ct-bar{height:26px;background:var(--panel2);border-radius:7px;overflow:hidden;position:relative}
+.ct-fill{height:100%;width:0;border-radius:7px;transition:width 1.1s cubic-bezier(.22,1,.36,1)}
+.ct-cost{font-family:var(--mono);font-size:15px;font-weight:700;color:#fff;text-align:right}
+.ct-cost small{display:block;font-size:10.5px;color:var(--faint);font-weight:400}
+.ct-lat{font-family:var(--mono);font-size:12.5px;color:var(--dim);text-align:right}
+.ct-row.jevrow{background:linear-gradient(90deg,rgba(34,211,238,.07),transparent 65%);border-left:3px solid var(--cyan)}
+.ct-row.jevrow .ct-cost{color:var(--cyan)}
+.note{font-size:12px;color:var(--faint);margin-top:16px;font-style:italic}
+
+.route-diagram{margin-top:44px;background:var(--panel);border:1px solid var(--line2);border-radius:18px;padding:34px 28px;position:relative;overflow:hidden}
+.rd-flow{display:flex;align-items:center;gap:0;flex-wrap:wrap;justify-content:center}
+.rd-node{background:var(--panel2);border:1px solid var(--line2);border-radius:13px;padding:14px 18px;text-align:center;min-width:150px}
+.rd-node .t{font-weight:700;font-size:14px;color:#fff}
+.rd-node .s{font-family:var(--mono);font-size:10.5px;color:var(--faint);margin-top:3px}
+.rd-node.gate{border-color:rgba(34,211,238,.5);background:linear-gradient(160deg,rgba(34,211,238,.12),rgba(139,92,246,.08)),var(--panel2);box-shadow:0 0 40px rgba(34,211,238,.1)}
+.rd-node.cheap{border-color:rgba(52,211,153,.4)}
+.rd-node.price{border-color:rgba(139,92,246,.45)}
+.rd-split{display:flex;flex-direction:column;gap:18px;margin-left:14px}
+.rd-branch{display:flex;align-items:center;gap:0}
+.rd-lbl{font-family:var(--mono);font-size:11px;padding:0 12px;white-space:nowrap}
+.rd-lbl.g{color:var(--green)}.rd-lbl.v{color:#b79bff}
+.rd-arrow{width:64px;height:2px;background:repeating-linear-gradient(90deg,var(--line2) 0 6px,transparent 6px 11px);position:relative}
+.rd-arrow::after{content:'';position:absolute;right:-1px;top:-4px;border:5px solid transparent;border-left:6px solid var(--line2)}
+.rd-arrow.g::after{border-left-color:var(--green)}.rd-arrow.g{background:repeating-linear-gradient(90deg,rgba(52,211,153,.5) 0 6px,transparent 6px 11px)}
+
+.calc{margin-top:26px;display:grid;grid-template-columns:340px 1fr;gap:24px}
+.calc-in{background:var(--panel);border:1px solid var(--line2);border-radius:16px;padding:26px}
+.calc-in label{font-size:12.5px;font-weight:600;color:var(--dim);display:flex;justify-content:space-between;margin:20px 0 8px}
+.calc-in label output{font-family:var(--mono);color:var(--cyan);font-weight:700}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:5px;border-radius:99px;background:var(--line2);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--cyan);box-shadow:0 0 0 4px rgba(34,211,238,.18),0 2px 8px rgba(0,0,0,.5);cursor:pointer;transition:.15s}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--cyan);border:none;cursor:pointer}
+.calc-out{display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:stretch}
+.pipe{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px;display:flex;flex-direction:column}
+.pipe .pt{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.pipe .pn{font-size:16px;font-weight:700;color:#fff;margin-top:4px}
+.pipe .pc{font-family:var(--mono);font-size:clamp(24px,3vw,34px);font-weight:700;margin-top:auto;padding-top:16px}
+.pipe .pd{font-size:11.5px;color:var(--faint);font-family:var(--mono)}
+.pipe.a{border-color:rgba(248,113,113,.25)}.pipe.a .pc{color:var(--red)}
+.pipe.b{border-color:rgba(52,211,153,.3)}.pipe.b .pc{color:var(--green)}
+.vs{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 20px;gap:8px}
+.vs .vsl{font-family:var(--mono);font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:.1em;text-align:center}
+.vs .vsv{font-size:clamp(20px,2.4vw,28px);font-weight:800;color:var(--cyan);font-family:var(--mono);white-space:nowrap}
+.vs .vsv.neg{color:var(--amber)}
+.vs .bar{width:90px;height:8px;border-radius:99px;background:var(--line2);overflow:hidden}
+.vs .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--green));transition:width .5s}
+
+.pat{position:relative}
+.pat .pnum{position:absolute;top:20px;right:22px;font-family:var(--mono);font-size:34px;font-weight:700;color:rgba(139,92,246,.16)}
+
+.cta{margin:80px 0 30px;text-align:center;background:linear-gradient(160deg,rgba(139,92,246,.12),rgba(34,211,238,.08)),var(--panel);border:1px solid var(--line2);border-radius:22px;padding:64px 30px}
+.cta h2{margin:0 auto}
+footer{border-top:1px solid var(--line);margin-top:60px;padding:34px 24px 44px;text-align:center;color:var(--faint);font-size:12.5px}
+footer .fl{font-family:var(--mono);font-size:11.5px;margin-top:8px;max-width:900px;margin-left:auto;margin-right:auto}
+
+@media(max-width:1020px){
+  .pg-body{grid-template-columns:1fr}
+  .pg-left{border-right:none;border-bottom:1px solid var(--line)}
+  .grid3,.grid4{grid-template-columns:repeat(2,1fr)}
+  .split{grid-template-columns:1fr}
+  .calc{grid-template-columns:1fr}
+  .hidden-costs{grid-template-columns:repeat(2,1fr)}
+  .ct-row{grid-template-columns:190px 1fr 130px;}.ct-lat{display:none}
+}
+@media(max-width:680px){
+  .grid2,.grid3,.grid4,.hidden-costs{grid-template-columns:1fr}
+  .calc-out{grid-template-columns:1fr}
+  .vs{flex-direction:row;padding:14px 0;flex-wrap:wrap}
+  .hstat{border-right:none;border-bottom:1px solid var(--line)}
+  .farrow{transform:rotate(90deg);min-width:80px;padding:18px 0}
+  .ct-row{grid-template-columns:1fr 110px}
+  .ct-bar{display:none}
+  .navlinks{display:none}
+  .pbar{grid-template-columns:96px 1fr 42px}
+  .rd-split{margin-left:0;margin-top:18px}
+}
+</style>
+</head>
+<body>
+<div class="bgfx"></div><div class="bggrid"></div><div id="progress"></div>
+
+<nav>
+  <div class="navin">
+    <div class="logo"><span class="mark">TS</span>TypeSafe <small>jev-1</small></div>
+    <div class="navlinks">
+      <a href="#how">How it works</a>
+      <a href="#primitives">Primitives</a>
+      <a href="#playground">Playground</a>
+      <a href="#prompts">Real prompts</a>
+      <a href="#cost">Cost math</a>
+      <a href="#routing">Routing &amp; savings</a>
+      <a href="#patterns">Patterns</a>
+    </div>
+    <a class="navcta" href="#playground">Try the demo →</a>
+  </div>
+</nav>
+
+<header>
+  <div class="badge"><span class="dot"></span>System One model · decisions, not text · pricing verified Sep 21, 2026</div>
+  <h1>Stop parsing prose.<br>Start branching on <span class="grad">typed answers</span>.</h1>
+  <p class="hero-sub"><b>Jev</b> is TypeSafe's flagship System One model. Send <b>state</b> + <b>typed questions</b> — get structured answers with <b>probabilities and confidence</b> your code can use directly. Then use it as a <b>~$0.0003 gate</b> in front of GPT‑5.6, Claude Opus 5, Gemini 3.1 Pro, Qwen3.8‑Max, Kimi K2.6 and DeepSeek V4 — and only pay frontier prices when a decision actually needs one.</p>
+  <div class="hero-ctas">
+    <a class="btn btn-p" href="#playground">▶ Run the live simulator</a>
+    <a class="btn btn-g" href="#cost">See the cost math</a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="hstat"><div class="v"><span data-count="3">0</span> questions</div><div class="k">per call · evaluated in parallel</div></div>
+    <div class="hstat"><div class="v">~<span data-count="172">0</span> ms</div><div class="k">median latency vs ~2.5 s for text LLMs</div></div>
+    <div class="hstat"><div class="v"><span data-count="0">0</span> parsers</div><div class="k">no JSON extraction, no retries, no schema drift</div></div>
+    <div class="hstat"><div class="v">~<span data-count="97">0</span>%</div><div class="k">cheaper than a Claude Opus 5 decision loop</div></div>
+  </div>
+
+  <div class="flow">
+    <div class="fnode"><div class="ft">input · one request</div><div class="fb">state + typed questions <span style="color:var(--faint)">(Choice · Score · Noul)</span></div></div>
+    <div class="farrow"><div class="lbl">one request</div><div class="ln"></div></div>
+    <div class="fnode core"><div class="ft" style="color:var(--violet)">TypeSafe AI model · jev-1</div><div class="fb">evaluates each question against the state — <b>in parallel, in isolation</b>. No context rot as you add questions.</div></div>
+    <div class="farrow"><div class="lbl">one response</div><div class="ln"></div></div>
+    <div class="fnode"><div class="ft">output · typed</div><div class="fb">answers + probabilities + confidence</div></div>
+    <div class="farrow"><div class="lbl">your code</div><div class="ln"></div></div>
+    <div class="fnode code"><div class="ft" style="color:var(--green)">deterministic</div><div class="fb"><b>branch · sort · route</b> — if / else on real values</div></div>
+  </div>
+
+  <div class="modelchips">
+    <div class="mc-t">Jev sits in front of every model in the September 2026 stack</div>
+    <div class="chips">
+      <span class="chip"><i style="background:#10a37f"></i>GPT‑5.6 Sol <span class="p">$4/$20</span></span>
+      <span class="chip"><i style="background:#d97757"></i>Claude Opus 5 <span class="p">$5/$25</span></span>
+      <span class="chip"><i style="background:#4285f4"></i>Gemini 3.1 Pro <span class="p">$2/$12</span></span>
+      <span class="chip"><i style="background:#7dd3fc"></i>Gemini 3.8 Flash <span class="p">$0.75/$3.75</span></span>
+      <span class="chip"><i style="background:#8b5cf6"></i>Qwen3.8‑Max <span class="p">$2/$6</span></span>
+      <span class="chip"><i style="background:#22d3ee"></i>Kimi K2.6 <span class="p">$0.60/$2.50</span></span>
+      <span class="chip"><i style="background:#34d399"></i>DeepSeek V4 Flash <span class="p">$0.14/$0.28</span></span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ HOW ============ -->
+<section id="how" class="reveal">
+  <div class="kicker">The mismatch</div>
+  <h2>LLMs write text for humans. Your code needs decisions.</h2>
+  <p class="lead">Every "classification" you run through a chat model is really a text-generation task you then coerce, parse, validate and retry back into a value. TypeSafe flips it: Jev is trained to output <b style="color:var(--tx)">calibrated decisions</b> — typed values with probability distributions — not sentences.</p>
+
+  <div class="grid2">
+    <div class="card" style="border-color:rgba(248,113,113,.25)">
+      <h3><span class="tagline tg-bad">Today · text LLM</span> Prompt → prose → parse → pray</h3>
+      <ul class="steps bad">
+        <li><span class="n">1</span><span><b>Write a prompt</b> asking GPT‑5.6 / Opus 5 / Gemini 3.1 / Qwen3.8 / Kimi / DeepSeek to "respond with strict JSON".</span></li>
+        <li><span class="n">2</span><span><b>Pay for tokens</b> — including prose, apologies, markdown fences and reasoning you never wanted. Output tokens are the expensive side ($3.75–$50 / 1M).</span></li>
+        <li><span class="n">3</span><span><b>Parse &amp; validate</b> — <code>json.loads</code>, schema checks, enum guards, type coercion.</span></li>
+        <li><span class="n">4</span><span><b>Handle failures</b> — ~5–10% of calls need retries or a repair prompt. 2× tokens, 2× latency.</span></li>
+        <li><span class="n">5</span><span><b>Trust a single value</b> — <code>"urgency": 4</code> arrives with no probability, no confidence, nothing to route on.</span></li>
+      </ul>
+    </div>
+    <div class="card" style="border-color:rgba(52,211,153,.3)">
+      <h3><span class="tagline tg-good">System One · Jev</span> Questions → typed answers → code</h3>
+      <ul class="steps good">
+        <li><span class="n">1</span><span><b>Declare typed questions</b> — Choice, Score, Noul — against a state object. No prompt engineering.</span></li>
+        <li><span class="n">2</span><span><b>One call, parallel evaluation</b> — every question judged independently against the same state. Adding questions barely moves latency.</span></li>
+        <li><span class="n">3</span><span><b>Structured results, guaranteed</b> — the answer <i>is</i> the schema. Nothing to parse, nothing to repair.</span></li>
+        <li><span class="n">4</span><span><b>Probabilities + confidence</b> — <code>0.61 / 0.24 / 0.09 / 0.06</code> and <code>confidence: 0.82</code> you can branch, sort and escalate on.</span></li>
+        <li><span class="n">5</span><span><b>~172 ms median</b> — fast enough to sit inline in front of every other model in your stack.</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRIMITIVES ============ -->
+<section id="primitives" class="reveal">
+  <div class="kicker">Three AI primitives</div>
+  <h2>Modular, composable, structured, reliable, fast.</h2>
+  <p class="lead">All three question types can be mixed in a single API call. Each is evaluated in parallel and in isolation — so adding more questions never creates context rot. Keep each question atomic (a "gut-check" a knowledgeable human could make in seconds), then compose the judgment <b style="color:var(--tx)">in your code</b>, with weights you control.</p>
+
+  <div class="grid3">
+    <div class="card prim pc">
+      <h3>Choice</h3><div class="ptype">pick one option from a list</div>
+      <p>"What is the primary intent of this ticket?" → returns the selected option, a probability for <i>every</i> option, and confidence.</p>
+      <div class="returns"><span class="ret">choice</span><span class="ret">probabilities{}</span><span class="ret">confidence</span></div>
+      <div class="codeblock" style="margin-top:16px"><pre class="code">{
+  "choice": "billing",
+  "probabilities": {
+    "billing": 0.61, "churn_risk": 0.24,
+    "bug_report": 0.09, "feature_request": 0.06
+  },
+  "confidence": 0.82
+}</pre></div>
+    </div>
+    <div class="card prim ps">
+      <h3>Score</h3><div class="ptype">rate the state on an ordered rubric</div>
+      <p>"How urgent is this ticket?" with descriptive levels → returns the score, the full distribution over levels, and confidence.</p>
+      <div class="returns"><span class="ret">score</span><span class="ret">probabilities{}</span><span class="ret">confidence</span></div>
+      <div class="codeblock" style="margin-top:16px"><pre class="code">{
+  "score": 4,
+  "probabilities": {
+    "1": 0.01, "2": 0.06, "3": 0.25,
+    "4": 0.47, "5": 0.21
+  },
+  "confidence": 0.74
+}</pre></div>
+    </div>
+    <div class="card prim pn">
+      <h3>Noul</h3><div class="ptype">is this statement true? → 0–1</div>
+      <p>"Does this ticket contain PII?" → returns the probability that the answer is yes. The perfect cheap boolean gate in front of expensive logic.</p>
+      <div class="returns"><span class="ret">noul ∈ [0, 1]</span></div>
+      <div class="codeblock" style="margin-top:16px"><pre class="code">{
+  "noul": 0.83
+}
+// if (answer.noul > 0.7) redactPII(ticket);</pre></div>
+    </div>
+  </div>
+
+  <div class="callout good" style="max-width:920px">
+    <b>Composite scoring:</b> instead of asking a frontier model to "rate this startup pitch" (one blob judgment), ask Jev separately about <b>market size</b>, <b>technical feasibility</b> and <b>differentiation</b> — then combine with your own formula. When priorities shift, change a coefficient in code, not a prompt.
+  </div>
+</section>
+
+<!-- ============ PLAYGROUND ============ -->
+<section id="playground" class="reveal">
+  <div class="kicker">Live simulator</div>
+  <h2>Watch a decision happen — both ways.</h2>
+  <p class="lead">Pick a real scenario. Run it through <b style="color:var(--cyan)">Jev</b>, then run the same judgment through a text model (<b style="color:#b79bff">GPT‑5.6 Sol, Claude Opus 5, Gemini 3.1 Pro, Qwen3.8‑Max, Kimi K2.6 or DeepSeek V4</b>) with the exact prompt you'd write in production. Compare latency, cost, retries — and what your code actually receives.</p>
+
+  <div class="pg-wrap">
+    <div class="pg-top">
+      <div class="pg-title"><span class="dot"></span>decision-playground · simulated responses</div>
+      <div class="scen-tabs" id="scenTabs">
+        <button class="scen-tab on" data-scen="triage">🎫 Support triage</button>
+        <button class="scen-tab" data-scen="review">🧑‍💻 PR risk gate</button>
+        <button class="scen-tab" data-scen="lead">📈 Lead qualification</button>
+      </div>
+    </div>
+    <div class="pg-body">
+      <div class="pg-left">
+        <div class="sect-lbl">① state — the context you send</div>
+        <div class="codeblock" style="margin-top:0"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">state.json</span></div><pre class="code" id="pgState"></pre></div>
+
+        <div class="sect-lbl" style="margin-top:20px">② engine</div>
+        <div class="pg-controls">
+          <div class="mode-sw" id="modeSw">
+            <button id="modeJev" class="on-j">⚡ Jev · System One</button>
+            <button id="modeLlm">💬 Text LLM</button>
+          </div>
+          <select class="pgsel" id="pgModel" style="display:none"></select>
+          <button class="runbtn" id="pgRun">▶ Run decision</button>
+        </div>
+
+        <div class="sect-lbl" id="reqLbl">③ request — typed questions</div>
+        <div class="codeblock" style="margin-top:0"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname" id="reqFname">POST /v1/evaluate</span></div><pre class="code" id="pgRequest"></pre></div>
+      </div>
+      <div class="pg-right">
+        <div class="sect-lbl">④ response — what your code receives</div>
+        <div class="pg-out" id="pgOut">
+          <div style="display:grid;place-items:center;height:380px;color:var(--faint);font-family:var(--mono);font-size:13px;text-align:center">
+            <div>
+              <div style="font-size:40px;margin-bottom:14px">⚡</div>
+              press <b style="color:var(--cyan)">Run decision</b><br>to evaluate the questions against the state
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROMPTS ============ -->
+<section id="prompts" class="reveal">
+  <div class="kicker">Real prompts · every major model · Sep 2026</div>
+  <h2>Exactly what "make a decision" costs on each model.</h2>
+  <p class="lead">The same support-triage task, written the way you'd really write it for Jev, Claude Opus 5, GPT‑5.6, Gemini 3.1 Pro, and the open-weight players — Qwen3.8‑Max, Kimi K2.6 and DeepSeek V4. Look at how much <b style="color:var(--tx)">machinery</b> the text models need to arrive at one typed value.</p>
+
+  <div class="tabs" id="promptTabs">
+    <button class="tab on" data-tab="jev"><i style="background:linear-gradient(135deg,var(--cyan),var(--violet))"></i>TypeSafe Jev</button>
+    <button class="tab" data-tab="claude"><i style="background:#d97757"></i>Claude Opus 5</button>
+    <button class="tab" data-tab="gpt"><i style="background:#10a37f"></i>GPT‑5.6</button>
+    <button class="tab" data-tab="gemini"><i style="background:#4285f4"></i>Gemini 3.1 Pro</button>
+    <button class="tab" data-tab="open"><i style="background:#34d399"></i>Qwen · Kimi · DeepSeek</button>
+  </div>
+
+  <div class="tabpanel on" id="tp-jev">
+    <div class="split">
+      <div>
+        <div class="codeblock hl"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">POST https://api.typesafe.ai/v1/evaluate</span><button class="copybtn">copy</button></div><pre class="code">{
+  "model": "jev-1",
+  "state": {
+    "ticket": {
+      "subject": "Charged twice for March — need refund",
+      "body": "We were billed $4,800 twice on Mar 3 for invoice
+               #INV-2291. CFO flagged it; we may pause renewal.",
+      "customer_tier": "enterprise"
+    }
+  },
+  "questions": [
+    { "id": "intent", "type": "choice",
+      "question": "Primary intent of this ticket?",
+      "options": ["billing", "bug_report",
+                  "feature_request", "churn_risk"] },
+    { "id": "urgency", "type": "score",
+      "question": "How urgent is this ticket?",
+      "levels": ["1 — can wait", "2 — this week", "3 — today",
+                 "4 — hours", "5 — drop everything"] },
+    { "id": "contains_pii", "type": "noul",
+      "question": "Does this ticket contain PII?" }
+  ]
+}</pre></div>
+      </div>
+      <div>
+        <div class="codeblock hl"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">response · 172 ms</span><button class="copybtn">copy</button></div><pre class="code">{
+  "answers": [
+    { "id": "intent", "type": "choice", "choice": "billing",
+      "probabilities": { "billing": 0.61, "churn_risk": 0.24,
+        "bug_report": 0.09, "feature_request": 0.06 },
+      "confidence": 0.82 },
+    { "id": "urgency", "type": "score", "score": 4,
+      "probabilities": { "1": 0.01, "2": 0.06, "3": 0.25,
+                         "4": 0.47, "5": 0.21 },
+      "confidence": 0.74 },
+    { "id": "contains_pii", "type": "noul", "noul": 0.83 }
+  ],
+  "latency_ms": 172
+}</pre></div>
+        <div class="callout good"><b>Zero glue code.</b> The response <i>is</i> the schema — typed values, full distributions, calibrated confidence. Nothing to parse, repair or re-roll.</div>
+      </div>
+    </div>
+    <div class="codeblock" style="margin-top:20px"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">triage.py · TypeSafe Python SDK</span><button class="copybtn">copy</button></div><pre class="code">from typesafe import TypeSafeClient
+
+client = TypeSafeClient()
+
+resp = client.evaluate(
+    state={"ticket": ticket},
+    questions=[
+        {"id": "intent", "type": "choice",
+         "question": "Primary intent of this ticket?",
+         "options": ["billing", "bug_report", "feature_request", "churn_risk"]},
+        {"id": "urgency", "type": "score",
+         "question": "How urgent is this ticket?",
+         "levels": ["1 — can wait", "2 — this week", "3 — today", "4 — hours", "5 — drop everything"]},
+        {"id": "contains_pii", "type": "noul",
+         "question": "Does this ticket contain PII?"},
+    ],
+)
+
+intent = resp.answers["intent"]          # typed object — not a string to regex apart
+
+if intent.confidence &lt; 0.6:               # not sure? escalate to a frontier model or human
+    escalate(ticket, to="claude-opus-5")
+elif resp.answers["urgency"].score &gt;= 4:
+    page_oncall(ticket)
+else:
+    route_to_queue(intent.choice, ticket)
+
+if resp.answers["contains_pii"].noul &gt; 0.7:
+    ticket = redact(ticket)
+</pre></div>
+  </div>
+
+  <div class="tabpanel" id="tp-claude">
+    <div class="codeblock"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">claude_triage.py · Anthropic SDK — the real prompt · Opus 5 $5/$25 per 1M tokens</span><button class="copybtn">copy</button></div><pre class="code">import anthropic, json
+
+client = anthropic.Anthropic()
+
+SYSTEM = """You are a strict ticket classifier. Read the state and answer every question.
+Respond ONLY with a JSON object of exactly this shape:
+{"intent": "billing" | "bug_report" | "feature_request" | "churn_risk",
+ "urgency": integer 1-5, "contains_pii": boolean}
+No prose. No markdown fences. No explanations. If uncertain, still pick the most likely value."""
+
+msg = client.messages.create(
+    model="claude-opus-5",               # Sep 2026 flagship; Fable 5.1 ($10/$50) is pricier still
+    max_tokens=300,
+    system=SYSTEM,
+    messages=[
+        {"role": "user", "content": f"State:\n{json.dumps(state, indent=2)}\n\nAnswer:"},
+        {"role": "assistant", "content": "{"},   # prefill trick: force the model to continue the JSON object
+    ],
+)
+
+raw = "{" + msg.content[0].text
+
+try:
+    data = json.loads(raw)
+    assert data["intent"] in {"billing", "bug_report", "feature_request", "churn_risk"}
+    assert isinstance(data["urgency"], int) and 1 &lt;= data["urgency"] &lt;= 5
+    assert isinstance(data["contains_pii"], bool)
+except (json.JSONDecodeError, KeyError, AssertionError):
+    # ~5-8% of calls land here: repair prompt = 2x tokens, +3s latency, still not guaranteed
+    data = retry_with_repair_prompt(raw)
+</pre></div>
+    <div class="callout"><b>What you don't get:</b> <code style="color:var(--amber)">"urgency": 4</code> arrives as a bare value — no probability distribution, no confidence to gate on. Opus 5 is a reasoning powerhouse; here you're paying $25/1M output tokens to use it as an enum picker, at ~3 s per call, plus the validation and retry machinery above. ≈ <b>$97 per 10k decisions</b>.</div>
+  </div>
+
+  <div class="tabpanel" id="tp-gpt">
+    <div class="codeblock"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">gpt_triage.py · OpenAI SDK — structured outputs · GPT‑5.6 Sol $4/$20 · Luna $0.20/$1.20</span><button class="copybtn">copy</button></div><pre class="code">from typing import Literal
+from openai import OpenAI
+from pydantic import BaseModel
+
+client = OpenAI()
+
+class TicketDecision(BaseModel):
+    intent: Literal["billing", "bug_report", "feature_request", "churn_risk"]
+    urgency: int            # 1-5
+    contains_pii: bool
+
+resp = client.chat.completions.parse(
+    model="gpt-5.6-sol",        # or gpt-5.6-luna ($0.20/$1.20) to cut the bill 20x
+    messages=[
+        {"role": "system", "content":
+            "You are a strict ticket classifier. Fill the schema using only the state provided. "
+            "urgency: 1=can wait, 2=this week, 3=today, 4=hours, 5=drop everything. "
+            "contains_pii: true if names, emails, payment or government identifiers appear."},
+        {"role": "user", "content": state_json},
+    ],
+    response_format=TicketDecision,
+)
+
+d = resp.choices[0].message.parsed   # schema-valid ✓
+
+# ...but note what is missing:
+#   d.urgency == 4          # why not 3? why not 5? no distribution.
+#   no confidence field     # nothing to route or escalate on.
+#   ~2.5 s + per-token bill # for three enum/bool/int values.
+</pre></div>
+    <div class="callout"><b>Structured outputs fixed the schema — not the economics.</b> Sol ≈ <b>$78 / 10k decisions</b>; even budget-tier Luna is ≈ $4.3 / 10k and still ~1 s per call with zero calibrated confidence. You keep paying generation tokens and generation latency for what is fundamentally a classification.</div>
+  </div>
+
+  <div class="tabpanel" id="tp-gemini">
+    <div class="codeblock"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">gemini_triage.py · Google Gen AI SDK — responseSchema · Gemini 3.1 Pro $2/$12 · 3.8 Flash $0.75/$3.75</span><button class="copybtn">copy</button></div><pre class="code">import json
+from google import genai
+
+client = genai.Client()
+
+schema = {
+  "type": "OBJECT",
+  "properties": {
+    "intent": {"type": "STRING",
+               "enum": ["billing", "bug_report", "feature_request", "churn_risk"]},
+    "urgency": {"type": "INTEGER", "minimum": 1, "maximum": 5},
+    "contains_pii": {"type": "BOOLEAN"},
+  },
+  "required": ["intent", "urgency", "contains_pii"],
+}
+
+resp = client.models.generate_content(
+    model="gemini-3.1-pro",       # or gemini-3.8-flash for ~3x less
+    contents=f"State:\n{state_json}\n\nClassify the ticket against the schema.",
+    config={
+        "system_instruction": "You are a strict ticket classifier. Answer only via the schema.",
+        "response_mime_type": "application/json",
+        "response_schema": schema,
+        "temperature": 0.0,
+    },
+)
+
+data = json.loads(resp.text)
+# Schema enforced by the API ✓ — but again: one value per question,
+# no probabilities, no confidence, generation-speed latency,
+# and every thinking-token Gemini spends is on your invoice.
+</pre></div>
+    <div class="callout"><b>Same shape, same gaps.</b> Gemini 3.1 Pro ≈ <b>$43 / 10k decisions</b>, 3.8 Flash ≈ $14.6 / 10k. Flash is fast and cheap for a frontier model — which is exactly why teams discover that a dedicated <i>decision</i> primitive is cheaper and faster still, and returns the uncertainty their code actually needs.</div>
+  </div>
+
+  <div class="tabpanel" id="tp-open">
+    <div class="codeblock"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">open_models_triage.py · Qwen3.8-Max $2/$6 · Kimi K2.6 $0.60/$2.50 · DeepSeek V4 Flash $0.14/$0.28 off-peak</span><button class="copybtn">copy</button></div><pre class="code">import json
+from openai import OpenAI
+from pydantic import BaseModel, ValidationError
+from typing import Literal
+
+class TicketDecision(BaseModel):
+    intent: Literal["billing", "bug_report", "feature_request", "churn_risk"]
+    urgency: int
+    contains_pii: bool
+
+# DeepSeek: https://api.deepseek.com/v1   ·   Qwen: dashscope   ·   Kimi: api.moonshot.ai
+client = OpenAI(base_url=BASE_URL, api_key=KEY)
+
+SYSTEM = ("You are a strict ticket classifier. Reply with JSON only: "
+          '{"intent": "billing|bug_report|feature_request|churn_risk", '
+          '"urgency": 1-5, "contains_pii": true|false}. No other text.')
+
+def decide(state_json, attempts=3):
+    for attempt in range(attempts):
+        r = client.chat.completions.create(
+            model=MODEL,                     # "deepseek-v4-flash" | "qwen3.8-max" | "kimi-k2.6"
+            messages=[{"role": "system", "content": SYSTEM},
+                      {"role": "user", "content": state_json}],
+            response_format={"type": "json_object"},
+            temperature=0.0,
+        )
+        try:
+            return TicketDecision.model_validate_json(r.choices[0].message.content)
+        except (ValidationError, json.JSONDecodeError):
+            continue                          # every retry re-bills all tokens
+    raise RuntimeError("model could not produce a valid decision")
+</pre></div>
+    <div class="callout"><b>The cheapest tokens of 2026 — and still a text pipeline.</b> DeepSeek V4 Flash ≈ <b>$1.9 / 10k</b> off-peak (peak pricing roughly doubles it), Kimi K2.6 ≈ $10.7, Qwen3.8‑Max ≈ $31. But you're still running a generation service as a decision engine: retry loops, validation code you own forever, p95 tail latency in the seconds, self-hosting GPUs if you go open-weights — and zero calibrated confidence for safe auto-escalation. Jev costs a similar order of magnitude as DeepSeek, answers in ~172 ms, and <i>cannot</i> return an unparseable decision.</div>
+  </div>
+
+  <div class="hidden-costs">
+    <div class="hcost"><b>Prose tokens on the invoice</b>Reasoning text, markdown fences, apologies and restatements you never asked for — all billed at output rates ($3.75–$50 / 1M).</div>
+    <div class="hcost"><b>Retry &amp; repair loops</b>~5–10% of calls fail schema/enum validation → second call, double tokens, doubled tail latency.</div>
+    <div class="hcost"><b>Validation engineering</b>Pydantic models, JSON extractors, enum guards, fallback branches — weeks of glue you maintain forever.</div>
+    <div class="hcost"><b>Tail latency</b>p95 of 3–6 s per decision makes text LLMs unusable inline (search ranking, fraud gates, real-time routing).</div>
+    <div class="hcost"><b>No calibrated uncertainty</b>One value, no distribution, no confidence → you can't tell "sure" from "coin flip", so you can't route safely.</div>
+    <div class="hcost"><b>Prompt &amp; model drift</b>Providers ship point releases constantly (5.5 → 5.6 → 6); your carefully-tuned "strict JSON" prompt quietly changes behavior.</div>
+  </div>
+</section>
+
+<!-- ============ COST ============ -->
+<section id="cost" class="reveal">
+  <div class="kicker">The cost math · September 21, 2026</div>
+  <h2>Cost per 10,000 decisions.</h2>
+  <p class="lead">One decision = the triage task above (3 questions; for text models ≈ 900 input / 180 output tokens of state + schema + instructions, incl. an 8% retry overhead). Jev bills per <b style="color:var(--tx)">question evaluated</b> — not per token of generated prose.</p>
+
+  <div class="cost-table" id="costTable">
+    <div class="ct-row ct-head"><div>Engine</div><div>Cost per 10k decisions</div><div style="text-align:right">Total</div><div style="text-align:right">Latency (med.)</div></div>
+  </div>
+  <p class="note">Public API pricing verified Sep 21, 2026 ($/1M in/out): GPT‑5.6 Sol $4/$20 · GPT‑5.6 Luna $0.20/$1.20 · Claude Opus 5 $5/$25 (Fable 5.1: $10/$50) · Gemini 3.1 Pro $2/$12 · Gemini 3.8 Flash $0.75/$3.75 · Qwen3.8‑Max $2/$6 · Kimi K2.6 $0.60/$2.50 · DeepSeek V4 Flash $0.14/$0.28 off-peak (peak $0.30/$1.20 ≈ $5.25/10k). Jev shown at an illustrative $0.09 / 1k questions × 3 questions. Self-hosted open weights additionally carry GPU infra, serving ops and validation-engineering costs not shown.</p>
+</section>
+
+<!-- ============ ROUTING ============ -->
+<section id="routing" class="reveal">
+  <div class="kicker">Confidence-gated routing · the killer pattern</div>
+  <h2>Put a $0.0003 decision in front of a $0.01 model.</h2>
+  <p class="lead">You don't replace frontier models — you <b style="color:var(--tx)">stop sending them traffic that doesn't need them</b>. Jev answers every request in ~172 ms with a confidence score. Confident answers go straight into deterministic code paths; only the uncertain, risky, ambiguous few get escalated to GPT‑5.6 / Claude Opus 5 / Gemini 3.1 Pro for deep reasoning — or to a human.</p>
+
+  <div class="route-diagram">
+    <div class="rd-flow">
+      <div class="rd-node"><div class="t">100% of traffic</div><div class="s">tickets · PRs · leads · requests</div></div>
+      <div class="rd-arrow"></div>
+      <div class="rd-node gate"><div class="t">⚡ Jev gate</div><div class="s">~172 ms · $0.00027 / req<br>choice + probabilities + confidence</div></div>
+      <div class="rd-split">
+        <div class="rd-branch">
+          <span class="rd-lbl g">confidence ≥ 0.6 · ~88%</span><div class="rd-arrow g"></div>
+          <div class="rd-node cheap"><div class="t">Deterministic code path</div><div class="s">$0 · if/else · queue · webhook</div></div>
+        </div>
+        <div class="rd-branch">
+          <span class="rd-lbl v">low confidence / high risk · ~12%</span><div class="rd-arrow"></div>
+          <div class="rd-node price"><div class="t">Frontier deep-reasoning</div><div class="s">GPT‑5.6 · Opus 5 · Gemini 3.1 · ~3 s<br>full chain-of-thought response</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="codeblock" style="margin-top:26px"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">router.py — confidence as the second axis</span><button class="copybtn">copy</button></div><pre class="code">ans = jev.evaluate(state={"ticket": t}, questions=[INTENT, URGENCY, PII])
+
+if ans.answers["intent"].confidence &gt;= 0.6 and ans.answers["urgency"].score &lt;= 3:
+    auto_route(ans.answers["intent"].choice, t)            # 88% of traffic ends here — $0.00027
+elif ans.answers["contains_pii"].noul &gt; 0.7:
+    t = redact(t); escalate(t, model="gpt-5.6-luna")       # cheap frontier tier for the careful path
+else:
+    escalate(t, model="claude-opus-5")                     # the flagship sees ONLY the hard 12%
+</pre></div>
+  </div>
+
+  <div class="calc">
+    <div class="calc-in">
+      <div class="sect-lbl" style="margin-bottom:2px">Savings calculator · monthly</div>
+      <label>Decisions / month <output id="reqOut">1,000,000</output></label>
+      <input type="range" id="reqSlider" min="0" max="100" value="66.7" step="0.1">
+      <label>Escalated to frontier model <output id="escOut">12%</output></label>
+      <input type="range" id="escSlider" min="0" max="50" value="12" step="1">
+      <label style="margin-top:22px">Frontier / open model behind the gate</label>
+      <select class="pgsel" id="calcModel" style="width:100%"></select>
+      <p class="note" style="margin-top:18px">Pipeline A: every decision goes to the model (short classification call). Pipeline B: Jev answers everything; only escalated requests reach the model for a deep response (~3.5k in / 1.5k out tokens).</p>
+    </div>
+    <div class="calc-out">
+      <div class="pipe a">
+        <div class="pt">Pipeline A</div>
+        <div class="pn">Text model for everything</div>
+        <div class="pd" id="aDetail">—</div>
+        <div class="pc" id="aCost">$0</div>
+        <div class="pd">≈ <span id="aLat">—</span> per decision</div>
+      </div>
+      <div class="vs">
+        <div class="vsl">you save</div>
+        <div class="vsv" id="saveAmt">$0</div>
+        <div class="vsl" id="savePct">—</div>
+        <div class="bar"><i id="saveBar"></i></div>
+      </div>
+      <div class="pipe b">
+        <div class="pt">Pipeline B</div>
+        <div class="pn">Jev gate + model for the hard few</div>
+        <div class="pd" id="bDetail">—</div>
+        <div class="pc" id="bCost">$0</div>
+        <div class="pd">≈ <span id="bLat">—</span> blended per decision</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PATTERNS ============ -->
+<section id="patterns" class="reveal">
+  <div class="kicker">Architectural patterns</div>
+  <h2>Keep code in control. Give the model narrow decisions.</h2>
+  <div class="grid4">
+    <div class="card pat"><div class="pnum">01</div><h3>Confidence-gated routing</h3><p>The answer tells you <b>what</b>; confidence tells you <b>whether to act</b>. High confidence → automatic path. Low confidence → frontier model, human review, or a second, narrower question.</p></div>
+    <div class="card pat"><div class="pnum">02</div><h3>Composite scoring</h3><p>Never ask one big "rate this" question. Ask atomic Score questions per dimension, combine with weights <b>in your code</b>. Change priorities by changing a coefficient, not a prompt.</p></div>
+    <div class="card pat"><div class="pnum">03</div><h3>Intent routing</h3><p>Classify every incoming request in ~172 ms and route it to the optimal handler: deterministic logic, GPT‑5.6 Luna, DeepSeek V4 Flash, a specialist model, or a human. The router costs fractions of a cent.</p></div>
+    <div class="card pat"><div class="pnum">04</div><h3>Speculative fan-out</h3><p>Send <b>many</b> questions in one call — including speculative ones ("would this user churn?", "does this need legal?"). Adding questions barely changes latency; your code decides which answers matter.</p></div>
+  </div>
+
+  <div class="cta reveal">
+    <div class="kicker" style="justify-content:center">Next steps</div>
+    <h2>Your first decision is one API call away.</h2>
+    <p class="lead" style="margin:14px auto 30px;text-align:center">Quick Start · AI Primer · Primitives · Confidence · Patterns — everything is in the docs.</p>
+    <div class="hero-ctas" style="margin-top:0">
+      <a class="btn btn-p" href="#playground">↑ Back to the playground</a>
+      <a class="btn btn-g" href="https://docs.typesafe.ai" target="_blank" rel="noopener">docs.typesafe.ai ↗</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="logo" style="justify-content:center"><span class="mark">TS</span>TypeSafe — System One models for software decisions</div>
+  <div class="fl">Jev · Choice · Score · Noul · confidence-gated routing — concept site built from docs.typesafe.ai. Model lineup &amp; per-token pricing reflect public sources as of Sep 21, 2026 (GPT‑5.6, Claude Opus 5 / Fable 5.1, Gemini 3.1 Pro / 3.8 Flash, Qwen3.8‑Max, Kimi K2.6, DeepSeek V4). Jev pricing illustrative. Playground responses are simulated.</div>
+</footer>
+
+<script>
+/* =========================================================
+   DATA — verified against public pricing, Sep 21 2026
+========================================================= */
+const MODEL_PRICING = {
+  jev:      {name:'Jev (TypeSafe)',      fam:'System One decision model',        color:'#22d3ee', perQuestion:0.00009, latency:'~172 ms', latMs:172},
+  opus5:    {name:'Claude Opus 5',       fam:'Anthropic · frontier ($5/$25)',    color:'#d97757', in:5,    out:25,   latency:'~3.0 s', latMs:3000},
+  gptsol:   {name:'GPT-5.6 Sol',         fam:'OpenAI · flagship ($4/$20)',       color:'#10a37f', in:4,    out:20,   latency:'~2.5 s', latMs:2500},
+  gempro:   {name:'Gemini 3.1 Pro',      fam:'Google · frontier ($2/$12)',       color:'#4285f4', in:2,    out:12,   latency:'~2.6 s', latMs:2600},
+  qwen:     {name:'Qwen3.8-Max',         fam:'Alibaba · open family ($2/$6)',    color:'#8b5cf6', in:2,    out:6,    latency:'~2.2 s', latMs:2200},
+  gemflash: {name:'Gemini 3.8 Flash',    fam:'Google · fast tier ($0.75/$3.75)', color:'#7dd3fc', in:0.75, out:3.75, latency:'~1.2 s', latMs:1200},
+  kimi:     {name:'Kimi K2.6',           fam:'Moonshot · open ($0.60/$2.50)',    color:'#22d3ee', in:0.60, out:2.50, latency:'~2.0 s', latMs:2000},
+  gptluna:  {name:'GPT-5.6 Luna',        fam:'OpenAI · budget ($0.20/$1.20)',    color:'#a7f3d0', in:0.20, out:1.20, latency:'~0.9 s', latMs:900},
+  deepseek: {name:'DeepSeek V4 Flash',   fam:'DeepSeek · open ($0.14/$0.28 off-peak)', color:'#34d399', in:0.14, out:0.28, latency:'~1.4 s', latMs:1400}
+};
+const SIMPLE_IN=900, SIMPLE_OUT=180, RETRY=1.08;
+const DEEP_IN=3500, DEEP_OUT=1500;
+const QUESTIONS_PER_CALL=3;
+
+function llmCostPerReq(m, tin, tout){ return (tin*m.in + tout*m.out)/1e6 * RETRY; }
+function jevCostPerReq(){ return QUESTIONS_PER_CALL * MODEL_PRICING.jev.perQuestion; }
+
+const SCENARIOS = {
+  triage: {
+    label:'Support triage',
+    state:{
+      ticket:{
+        id:'TCK-88412', channel:'email', customer_tier:'enterprise',
+        subject:'Charged twice for March — need refund before board meeting',
+        body:'We were billed $4,800 twice on Mar 3 for the same invoice (#INV-2291). Our CFO flagged it and we may pause our renewal until this is resolved. Please handle today. — Dana Whitfield, Ops Lead',
+        account_age_months:31, previous_tickets_90d:4
+      }
+    },
+    questions:[
+      {id:'intent', type:'choice', question:'What is the primary intent of this ticket?', options:['billing','bug_report','feature_request','churn_risk']},
+      {id:'urgency', type:'score', question:'How urgent is this ticket?', levels:['1 — can wait','2 — this week','3 — today','4 — hours','5 — drop everything']},
+      {id:'contains_pii', type:'noul', question:'Does this ticket contain personally identifiable information (PII)?'}
+    ],
+    jev:[
+      {id:'intent', type:'choice', value:'billing', probs:[['billing',0.61],['churn_risk',0.24],['bug_report',0.09],['feature_request',0.06]], conf:{label:'high',v:0.82}},
+      {id:'urgency', type:'score', value:'4 — hours', probs:[['5',0.21],['4',0.47],['3',0.25],['2',0.06],['1',0.01]], conf:{label:'med',v:0.74}},
+      {id:'contains_pii', type:'noul', value:0.83, conf:{label:'high',v:0.81}}
+    ],
+    parsed:{intent:'billing', urgency:4, contains_pii:true},
+    sys:'You are a strict ticket classifier. Read the state and answer every question.\nRespond ONLY with JSON: {"intent": "billing|bug_report|feature_request|churn_risk",\n"urgency": int 1-5, "contains_pii": bool}. No prose, no fences. If unsure, guess.',
+    good:'{\n  "intent": "billing",\n  "urgency": 4,\n  "contains_pii": true\n}\n',
+    bad:'Sure — here is my analysis of the ticket:\n\nThe customer was double-billed, which is primarily a **billing** issue, though the\nmention of pausing renewal adds churn risk. Urgency feels high because of the CFO.\n\n\u0060\u0060\u0060json\n{\n  "intent": "billing",\n  "urgency": "4 (high — same day)",\n  "contains_pii": true,\n  "reasoning": "double charge + renewal threat"\n\u0060\u0060\u0060\n\nLet me know if you would like me to draft the refund email!'
+  },
+  review: {
+    label:'PR risk gate',
+    state:{
+      pull_request:{
+        id:'PR-2214', repo:'checkout-service', author:'contributor-42',
+        files_changed:14, additions:612, deletions:88,
+        touches:['payments/stripe_adapter.py','ledger/postings.go','migrations/0091.sql'],
+        description:'Refactor payment capture flow and add partial-refund support',
+        tests_added:false, ci_status:'passing (coverage 41% → 33%)',
+        review_history:'author has 3 prior PRs, 1 reverted'
+      }
+    },
+    questions:[
+      {id:'risk', type:'choice', question:'What is the deployment risk level of this PR?', options:['low','medium','high','critical']},
+      {id:'tests_adequate', type:'noul', question:'Is the test coverage adequate for the changes made?'},
+      {id:'maintainability', type:'score', question:'How maintainable are these changes?', levels:['1 — rewrite needed','2 — significant debt','3 — acceptable','4 — clean','5 — exemplary']}
+    ],
+    jev:[
+      {id:'risk', type:'choice', value:'high', probs:[['critical',0.18],['high',0.52],['medium',0.24],['low',0.06]], conf:{label:'med',v:0.68}},
+      {id:'tests_adequate', type:'noul', value:0.12, conf:{label:'high',v:0.90}},
+      {id:'maintainability', type:'score', value:'2 — significant debt', probs:[['1',0.14],['2',0.49],['3',0.29],['4',0.07],['5',0.01]], conf:{label:'med',v:0.66}}
+    ],
+    parsed:{risk:'high', tests_adequate:false, maintainability:2},
+    sys:'You are a strict code-review gate. Read the PR state and answer every question.\nRespond ONLY with JSON: {"risk": "low|medium|high|critical",\n"tests_adequate": bool, "maintainability": int 1-5}. No prose, no fences.',
+    good:'{\n  "risk": "high",\n  "tests_adequate": false,\n  "maintainability": 2\n}\n',
+    bad:'Looking at this PR, several things stand out. It touches payments and the ledger,\nadds no tests, and coverage *dropped* 8 points. That is concerning.\n\n{\n  "risk": "HIGH",\n  "tests_adequate": "no",\n  "maintainability": 2.5,\n  "notes": "recommend blocking until tests are added"\n'
+  },
+  lead: {
+    label:'Lead qualification',
+    state:{
+      lead:{
+        company:'Northwind Logistics', employees:180, industry:'freight & supply chain',
+        source:'webinar-signup', email_domain:'northwind-logistics.com',
+        site_visits_30d:11, pricing_page_views:7,
+        notes:'Asked twice about SOC 2 compliance and SSO. Requested a pilot for the dispatch team (25 seats). Did not ask about price.',
+        crm_owner:'unassigned'
+      }
+    },
+    questions:[
+      {id:'segment', type:'choice', question:'Which segment does this lead belong to?', options:['enterprise','smb','startup','individual']},
+      {id:'fit', type:'score', question:'How well does this lead fit our ideal customer profile?', levels:['1 — poor fit','2 — weak','3 — moderate','4 — strong','5 — ideal']},
+      {id:'sales_ready', type:'noul', question:'Is this lead ready for a sales conversation this week?'}
+    ],
+    jev:[
+      {id:'segment', type:'choice', value:'smb', probs:[['smb',0.58],['enterprise',0.31],['startup',0.09],['individual',0.02]], conf:{label:'med',v:0.71}},
+      {id:'fit', type:'score', value:'4 — strong', probs:[['5',0.22],['4',0.44],['3',0.27],['2',0.06],['1',0.01]], conf:{label:'high',v:0.79}},
+      {id:'sales_ready', type:'noul', value:0.86, conf:{label:'high',v:0.84}}
+    ],
+    parsed:{segment:'smb', fit:4, sales_ready:true},
+    sys:'You are a strict lead qualifier. Read the CRM state and answer every question.\nRespond ONLY with JSON: {"segment": "enterprise|smb|startup|individual",\n"fit": int 1-5, "sales_ready": bool}. No prose, no fences.',
+    good:'{\n  "segment": "smb",\n  "fit": 4,\n  "sales_ready": true\n}\n',
+    bad:'Great lead! Here is my take:\n\n- 180 employees → mid-market / SMB territory\n- 7 pricing-page views + SOC 2 questions = high intent\n- No price objections yet, wants a 25-seat pilot\n\n\u0060\u0060\u0060json\n{"segment": "smb", "fit": "4 out of 5", "sales_ready": "yes", "next_step": "book demo"}\n\u0060\u0060\u0060\n\nWant me to draft the outreach email?'
+  }
+};
+
+/* =========================================================
+   UTIL
+========================================================= */
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmtMoney(v, dp){
+  if(v>=1e6) return '$'+(v/1e6).toFixed(2)+'M';
+  if(v>=1e3) return '$'+(v/1e3).toFixed(dp===undefined?1:dp)+'k';
+  return '$'+v.toFixed(dp===undefined?2:dp);
+}
+function fmtInt(v){ return new Intl.NumberFormat('en-US').format(Math.round(v)); }
+
+function highlightEl(el){
+  const html = el.innerHTML;
+  const re = /("(?:[^"\\]|\\.)*?"|'(?:[^'\\]|\\.)*?')|(#[^\n]*)|(\/\/[^\n]*)|\b(true|false|null|True|False|None|import|from|def|return|await|async|try|except|if|elif|else|for|in|continue|raise|class|const|let|new|with|as|assert|not|and|or)\b|(\b\d+\.?\d*\b)/g;
+  el.innerHTML = html.replace(re, (m, str, cmt, cmt2, kw, num, off) => {
+    if (cmt || cmt2) return '<span class="c">'+m+'</span>';
+    if (kw) return '<span class="b">'+m+'</span>';
+    if (num) return '<span class="n">'+m+'</span>';
+    if (str) {
+      const after = html.slice(off + m.length).match(/^\s*:/);
+      return '<span class="'+(after?'k':'s')+'">'+m+'</span>';
+    }
+    return m;
+  });
+}
+function setCode(el, text){
+  el.className = 'code';
+  el.innerHTML = esc(text);
+  highlightEl(el);
+}
+document.addEventListener('click', e => {
+  if (e.target.classList.contains('copybtn')){
+    const pre = e.target.closest('.codeblock').querySelector('pre.code');
+    navigator.clipboard.writeText(pre.innerText).then(()=>{
+      e.target.textContent='copied ✓';
+      setTimeout(()=>e.target.textContent='copy', 1400);
+    });
+  }
+});
+
+/* =========================================================
+   REVEAL / PROGRESS / NAV / COUNTERS
+========================================================= */
+const revealObs = new IntersectionObserver(entries=>{
+  entries.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('visible'); revealObs.unobserve(en.target); } });
+},{threshold:0.08});
+$$('.reveal').forEach(el=>revealObs.observe(el));
+
+window.addEventListener('scroll', ()=>{
+  const h = document.documentElement;
+  $('#progress').style.width = (h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
+});
+
+const navObs = new IntersectionObserver(entries=>{
+  entries.forEach(en=>{
+    if(en.isIntersecting){
+      $$('.navlinks a').forEach(a=>a.classList.toggle('active', a.getAttribute('href')==='#'+en.target.id));
+    }
+  });
+},{rootMargin:'-30% 0px -60% 0px'});
+$$('section[id]').forEach(s=>navObs.observe(s));
+
+const countObs = new IntersectionObserver(entries=>{
+  entries.forEach(en=>{
+    if(!en.isIntersecting) return;
+    const el = en.target, target = parseFloat(el.dataset.count);
+    countObs.unobserve(el);
+    const t0 = performance.now(), dur = 1200;
+    function tick(now){
+      const p = Math.min(1,(now-t0)/dur), e = 1-Math.pow(1-p,3);
+      el.textContent = Math.round(target*e);
+      if(p<1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  });
+},{threshold:0.6});
+$$('[data-count]').forEach(el=>countObs.observe(el));
+
+/* =========================================================
+   COST TABLE
+========================================================= */
+(function buildCostTable(){
+  const table = $('#costTable');
+  const order = ['jev','opus5','gptsol','gempro','qwen','gemflash','kimi','gptluna','deepseek'];
+  const rows = order.map(k=>{
+    const m = MODEL_PRICING[k];
+    const cost = (k==='jev' ? jevCostPerReq() : llmCostPerReq(m, SIMPLE_IN, SIMPLE_OUT)) * 10000;
+    return {key:k, cost, latency:m.latency};
+  });
+  const max = Math.max.apply(null, rows.map(r=>r.cost));
+  rows.forEach(r=>{
+    const m = MODEL_PRICING[r.key];
+    const div = document.createElement('div');
+    div.className = 'ct-row' + (r.key==='jev' ? ' jevrow' : '');
+    div.innerHTML =
+      '<div class="ct-model"><i style="background:'+m.color+'"></i><span>'+m.name+'<span class="fam">'+m.fam+'</span></span></div>'+
+      '<div class="ct-bar"><div class="ct-fill" data-w="'+(r.cost/max*100)+'" style="background:linear-gradient(90deg,'+m.color+'55,'+m.color+')"></div></div>'+
+      '<div class="ct-cost">'+fmtMoney(r.cost,2)+'<small>'+(r.key==='jev'?'3 questions · $0.09/1k q':'+8% retries & glue code')+'</small></div>'+
+      '<div class="ct-lat">'+r.latency+'</div>';
+    table.appendChild(div);
+  });
+  const cObs = new IntersectionObserver(es=>{
+    es.forEach(en=>{ if(en.isIntersecting){ $$('#costTable .ct-fill').forEach(f=>{ f.style.width=f.dataset.w+'%'; }); cObs.disconnect(); } });
+  },{threshold:0.25});
+  cObs.observe(table);
+})();
+
+/* =========================================================
+   SAVINGS CALCULATOR
+========================================================= */
+(function calculator(){
+  const sel = $('#calcModel');
+  ['opus5','gptsol','gempro','qwen','gemflash','kimi','gptluna','deepseek'].forEach(k=>{
+    const o = document.createElement('option'); o.value=k; o.textContent=MODEL_PRICING[k].name; sel.appendChild(o);
+  });
+  sel.value='opus5';
+  const reqS=$('#reqSlider'), escS=$('#escSlider');
+  function reqFromSlider(v){ return Math.round(Math.pow(10, 4 + (v/100)*3) / 1000) * 1000; }
+  function update(){
+    const reqs = reqFromSlider(parseFloat(reqS.value));
+    const escRate = parseInt(escS.value,10)/100;
+    const m = MODEL_PRICING[sel.value];
+    $('#reqOut').textContent = fmtInt(reqs);
+    $('#escOut').textContent = escS.value + '%';
+
+    const aPer = llmCostPerReq(m, SIMPLE_IN, SIMPLE_OUT);
+    const deepPer = llmCostPerReq(m, DEEP_IN, DEEP_OUT);
+    const bPer = jevCostPerReq() + escRate * deepPer;
+    const a = reqs*aPer, b = reqs*bPer;
+    const save = a-b, pct = a>0 ? save/a*100 : 0;
+
+    $('#aCost').textContent = fmtMoney(a,1);
+    $('#aDetail').textContent = fmtInt(reqs)+' × $'+aPer.toFixed(6)+' (classification calls, incl. retries)';
+    $('#bCost').textContent = fmtMoney(b,1);
+    $('#bDetail').textContent = fmtInt(reqs)+' × $'+jevCostPerReq().toFixed(5)+' Jev  +  '+fmtInt(reqs*escRate)+' × $'+deepPer.toFixed(4)+' deep calls';
+
+    const sv = $('#saveAmt');
+    sv.textContent = (save>=0?'':'-') + fmtMoney(Math.abs(save),1) + '/mo';
+    sv.classList.toggle('neg', save<0);
+    $('#savePct').textContent = save>=0
+      ? pct.toFixed(1)+'% cheaper · '+fmtMoney(save*12,1)+' / year'
+      : 'open-model tokens already near decision price — Jev still wins on ~172 ms latency, guaranteed typing & calibrated confidence (infra costs excluded)';
+    $('#saveBar').style.width = Math.max(0,Math.min(100,pct))+'%';
+
+    $('#aLat').textContent = (m.latMs/1000).toFixed(1)+' s';
+    const bLatMs = 172 + escRate*4200;
+    $('#bLat').textContent = bLatMs<1000 ? Math.round(bLatMs)+' ms' : (bLatMs/1000).toFixed(2)+' s';
+  }
+  reqS.addEventListener('input',update);
+  escS.addEventListener('input',update);
+  sel.addEventListener('change',update);
+  update();
+})();
+
+/* =========================================================
+   PROMPT TABS
+========================================================= */
+$$('#promptTabs .tab').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    $$('#promptTabs .tab').forEach(b=>b.classList.remove('on'));
+    btn.classList.add('on');
+    $$('.tabpanel').forEach(p=>p.classList.remove('on'));
+    $('#tp-'+btn.dataset.tab).classList.add('on');
+  });
+});
+
+/* =========================================================
+   PLAYGROUND
+========================================================= */
+const PG = { scen:'triage', mode:'jev', attempts:{} };
+let pgTimers = [], pgRunning = false;
+
+function pgClearTimers(){ pgTimers.forEach(t=>{clearTimeout(t);clearInterval(t);}); pgTimers=[]; }
+function pgLater(fn, ms){ const t=setTimeout(fn,ms); pgTimers.push(t); return t; }
+
+(function initPlaygroundModelSelect(){
+  const pgModelSel=$('#pgModel');
+  ['opus5','gptsol','gempro','qwen','gemflash','kimi','gptluna','deepseek'].forEach(k=>{
+    const o=document.createElement('option'); o.value=k; o.textContent=MODEL_PRICING[k].name; pgModelSel.appendChild(o);
+  });
+  pgModelSel.value='opus5';
+})();
+
+function statBar(items){
+  return '<div class="out-stats">'+items.map(it=>
+    '<div class="ostat"><div class="v '+(it.cls||'')+'">'+it.v+'</div><div class="k">'+it.k+'</div></div>').join('')+'</div>';
+}
+function confBadge(c){ return c ? '<span class="conf '+c.label+'">confidence '+c.v.toFixed(2)+'</span>' : ''; }
+
+function renderAnswerCard(a){
+  let body='';
+  if(a.type==='choice'){
+    const sorted=a.probs.slice().sort((x,y)=>y[1]-x[1]);
+    body='<div class="pbars">'+sorted.map((p,i)=>
+      '<div class="pbar'+(i===0?' win':'')+'"><span class="pl">'+p[0]+'</span><span class="pt"><span class="pf" data-w="'+(p[1]*100)+'"></span></span><span class="pv">'+p[1].toFixed(2)+'</span></div>').join('')+'</div>';
+  } else if(a.type==='score'){
+    const sorted=a.probs.slice().sort((x,y)=>parseInt(y[0],10)-parseInt(x[0],10));
+    const maxP=Math.max.apply(null, sorted.map(p=>p[1]));
+    body='<div class="pbars">'+sorted.map(p=>
+      '<div class="pbar'+(p[1]===maxP?' win':'')+'"><span class="pl">level '+p[0]+'</span><span class="pt"><span class="pf" data-w="'+(p[1]*100)+'"></span></span><span class="pv">'+p[1].toFixed(2)+'</span></div>').join('')+'</div>';
+  } else {
+    body='<div class="noul-wrap"><div class="noul-track"><div class="noul-mark" data-l="'+(a.value*100)+'" style="left:0%"></div></div>'+
+      '<div class="noul-lbl"><span>0 — false</span><span style="color:var(--cyan);font-weight:700">P(yes) = '+a.value.toFixed(2)+'</span><span>1 — true</span></div></div>';
+  }
+  const valTxt = a.type==='noul' ? a.value.toFixed(2) : a.value;
+  return '<div class="ans-card"><div class="ah"><span class="qid">'+a.id+'</span><span class="qtype qt-'+a.type+'">'+a.type+'</span>'+confBadge(a.conf)+'<span class="val">'+valTxt+'</span></div>'+body+'</div>';
+}
+
+function idlePanel(){
+  $('#pgOut').innerHTML =
+    '<div style="display:grid;place-items:center;height:380px;color:var(--faint);font-family:var(--mono);font-size:13px;text-align:center"><div>'+
+    '<div style="font-size:40px;margin-bottom:14px">'+(PG.mode==='jev'?'⚡':'💬')+'</div>'+
+    'press <b style="color:var(--cyan)">Run decision</b><br>'+(PG.mode==='jev'?'evaluate typed questions against the state':'generate → parse → validate → retry')+'</div></div>';
+}
+
+function renderStatic(){
+  const sc=SCENARIOS[PG.scen];
+  setCode($('#pgState'), JSON.stringify(sc.state,null,2));
+  if(PG.mode==='jev'){
+    $('#reqLbl').textContent='③ request — typed questions';
+    $('#reqFname').textContent='POST /v1/evaluate · jev-1';
+    setCode($('#pgRequest'), JSON.stringify({model:'jev-1', state:{'…':'state above'}, questions:sc.questions},null,2));
+  }else{
+    const m=MODEL_PRICING[$('#pgModel').value];
+    $('#reqLbl').textContent='③ request — the prompt you actually write';
+    $('#reqFname').textContent='POST → '+m.name;
+    const full=JSON.stringify(sc.state,null,2);
+    setCode($('#pgRequest'), 'SYSTEM:\n'+sc.sys+'\n\nUSER:\nState:\n'+(full.length>560? full.slice(0,560)+'\n… (truncated)':full)+'\n\nAnswer:');
+  }
+  idlePanel();
+}
+
+/* ---------- JEV RUN ---------- */
+function runJev(){
+  const sc=SCENARIOS[PG.scen];
+  pgRunning=true; $('#pgRun').disabled=true; pgClearTimers();
+  const out=$('#pgOut');
+  const t0=performance.now();
+  out.innerHTML=
+    '<div class="out-head"><span class="pill" style="color:var(--cyan);border-color:rgba(34,211,238,.4)">jev-1</span> evaluating '+sc.questions.length+' questions in parallel · in isolation<span class="timer" id="pgTimer">0 ms</span></div>'+
+    '<div class="logline"><span class="inf">→</span> POST /v1/evaluate · one request · typed questions, zero prose</div>'+
+    '<div id="pgCards">'+sc.jev.map(()=>'<div class="skel"></div>').join('')+'</div><div id="pgFoot"></div>';
+  const timerEl=$('#pgTimer');
+  const iv=setInterval(function(){ timerEl.textContent=Math.round(performance.now()-t0)+' ms'; },40);
+  pgTimers.push(iv);
+
+  const cards=$('#pgCards');
+  sc.jev.forEach(function(a,i){
+    pgLater(function(){
+      const skel=cards.children[i];
+      if(!skel) return;
+      skel.outerHTML=renderAnswerCard(a);
+      const card=cards.children[i];
+      requestAnimationFrame(function(){
+        card.classList.add('in');
+        card.querySelectorAll('.pf').forEach(function(f){ f.style.width=f.dataset.w+'%'; });
+        const mark=card.querySelector('.noul-mark');
+        if(mark){ pgLater(function(){ mark.style.left='calc('+mark.dataset.l+'% - 1px)'; },60); }
+      });
+    }, 320+i*320);
+  });
+
+  pgLater(function(){
+    clearInterval(iv);
+    timerEl.textContent='172 ms';
+    const total=sc.jev.length*MODEL_PRICING.jev.perQuestion;
+    $('#pgFoot').innerHTML=
+      statBar([
+        {v:'172 ms',k:'measured latency',cls:'c'},
+        {v:'$'+total.toFixed(5),k:'cost · '+sc.jev.length+' questions',cls:'g'},
+        {v:'0',k:'tokens parsed',cls:'g'},
+        {v:'0',k:'retries needed',cls:'g'}
+      ])+
+      '<div class="verdict">✓ Every answer is schema-typed with a full probability distribution + calibrated confidence. Your code can <b>branch</b> (intent.choice), <b>sort</b> (probabilities) and <b>gate</b> (confidence &lt; 0.6 → escalate to a frontier model) — with no parsing, validation or repair code.</div>';
+    pgRunning=false; $('#pgRun').disabled=false;
+  }, 320+sc.jev.length*320+500);
+}
+
+/* ---------- LLM RUN ---------- */
+function runLlm(){
+  const sc=SCENARIOS[PG.scen];
+  const mk=$('#pgModel').value, m=MODEL_PRICING[mk];
+  pgRunning=true; $('#pgRun').disabled=true; pgClearTimers();
+  const key=PG.scen+':'+mk;
+  const firstAttempt = !PG.attempts[key];
+  PG.attempts[key]=(PG.attempts[key]||0)+1;
+
+  const out=$('#pgOut');
+  const t0=performance.now();
+  out.innerHTML=
+    '<div class="out-head"><span class="pill" style="color:#b79bff;border-color:rgba(139,92,246,.4)">'+m.name+'</span> text generation → parse → validate<span class="timer" id="pgTimer">0 ms</span></div>'+
+    '<div id="pgLog"></div>'+
+    '<div class="sect-lbl" style="margin-top:14px">raw model output (streaming)</div>'+
+    '<div class="streambox" id="pgStream"><span class="cursor"></span></div>'+
+    '<div id="pgParse" style="margin-top:12px"></div><div id="pgFoot"></div>';
+  const timerEl=$('#pgTimer');
+  const iv=setInterval(function(){ timerEl.textContent=Math.round(performance.now()-t0)+' ms'; },40);
+  pgTimers.push(iv);
+
+  const log=$('#pgLog');
+  function logLine(html,delay){ pgLater(function(){ log.insertAdjacentHTML('beforeend','<div class="logline">'+html+'</div>'); },delay); }
+  logLine('<span class="inf">→</span> POST /chat/completions · model='+m.name+' · prompt ≈ '+SIMPLE_IN+' tokens',0);
+  logLine('<span class="wr">⏳</span> generating text tokens (you pay for every one, output @ $'+m.out+'/1M)…',400);
+
+  const streamEl=$('#pgStream');
+  function streamText(text,ms,cb){
+    let i=0;
+    const step=Math.max(2,Math.floor(text.length/(ms/16)));
+    const t=setInterval(function(){
+      i+=step;
+      streamEl.innerHTML=esc(text.slice(0,i))+'<span class="cursor"></span>';
+      if(i>=text.length){ clearInterval(t); streamEl.innerHTML=esc(text); if(cb) cb(); }
+    },16);
+    pgTimers.push(t);
+  }
+
+  function tryParse(ok){
+    const parse=$('#pgParse');
+    if(!ok){
+      parse.innerHTML=
+        '<div class="logline"><span class="er">✕ json.loads() failed</span> — JSONDecodeError: prose outside object · fenced block · truncated</div>'+
+        '<div class="logline"><span class="er">✕ schema validation failed</span> — expected int / bool / enum, got strings like "4 (high — same day)"</div>'+
+        '<div class="logline"><span class="wr">↻ retry 1/2</span> — repair prompt: "Return ONLY valid JSON, no prose" · +'+SIMPLE_IN+' tokens billed again…</div>';
+      pgLater(function(){
+        streamEl.innerHTML='';
+        logLine('<span class="inf">→</span> retry request sent · billing doubles',0);
+        streamText(sc.good,1700,function(){ finishParse(true); });
+      },1200);
+    } else {
+      finishParse(false);
+    }
+  }
+  function finishParse(retried){
+    const parse=$('#pgParse');
+    parse.innerHTML=
+      '<div class="logline"><span class="ok">✓ json.loads() OK</span> — extracted object'+(retried||!firstAttempt?' (after retry)':'')+'</div>'+
+      '<div class="logline"><span class="ok">✓ pydantic validation OK</span> — enums &amp; types coerced into your schema</div>'+
+      '<div class="codeblock" style="margin-top:10px"><div class="cb-head"><div class="dots"><i></i><i></i><i></i></div><span class="fname">parsed decision — finally usable</span></div><pre class="code" id="pgParsed"></pre></div>';
+    setCode($('#pgParsed'), JSON.stringify(sc.parsed,null,2));
+    finish(retried||!firstAttempt);
+  }
+  function finish(hadRetry){
+    clearInterval(iv);
+    const elapsed=Math.round(performance.now()-t0);
+    timerEl.textContent=elapsed+' ms';
+    const calls = hadRetry ? 2 : 1;
+    const cost=llmCostPerReq(m,SIMPLE_IN,SIMPLE_OUT)*calls;
+    $('#pgFoot').innerHTML=
+      statBar([
+        {v:(elapsed/1000).toFixed(1)+' s',k:'wall-clock latency',cls:'r'},
+        {v:'$'+cost.toFixed(6),k:'cost · '+calls+' call'+(calls>1?'s (retry)':''),cls:'r'},
+        {v:(SIMPLE_OUT*calls)+'+',k:'output tokens billed',cls:''},
+        {v:hadRetry?'1':'0',k:'parse failures',cls:hadRetry?'r':'g'}
+      ])+
+      '<div class="verdict">'+(hadRetry
+        ? '✕ The first response wrapped the JSON in prose and fences, returned <b>"4 (high — same day)"</b> instead of an int, and truncated the object — the classic failure you build retry/repair code for. Run it again to see the "clean" path… which still gives you <b>bare values</b>: no probabilities, no confidence.'
+        : '✓ Parsed successfully — but notice what your code still doesn\'t get: <b>no distribution, no confidence</b>. "urgency": 4 at 51% certainty and "urgency": 4 at 99% certainty look identical. That\'s why text-LLM decisions can\'t be safely auto-acted on — and why Jev sits in front of them.</div>');
+    pgRunning=false; $('#pgRun').disabled=false;
+  }
+
+  pgLater(function(){
+    if(firstAttempt){ streamText(sc.bad,2100,function(){ tryParse(false); }); }
+    else { streamText(sc.good,1700,function(){ tryParse(true); }); }
+  },900);
+}
+
+/* wire up */
+$('#pgRun').addEventListener('click', function(){
+  if(pgRunning) return;
+  if(PG.mode==='jev'){ runJev(); } else { runLlm(); }
+});
+$('#modeJev').addEventListener('click', function(){
+  if(pgRunning) return;
+  PG.mode='jev'; $('#modeJev').className='on-j'; $('#modeLlm').className=''; $('#pgModel').style.display='none'; renderStatic();
+});
+$('#modeLlm').addEventListener('click', function(){
+  if(pgRunning) return;
+  PG.mode='llm'; $('#modeLlm').className='on-l'; $('#modeJev').className=''; $('#pgModel').style.display=''; renderStatic();
+});
+$('#scenTabs').addEventListener('click', function(e){
+  const b=e.target.closest('.scen-tab');
+  if(!b||pgRunning) return;
+  $$('.scen-tab').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');
+  PG.scen=b.dataset.scen;
+  renderStatic();
+});
+$('#pgModel').addEventListener('change', renderStatic);
+renderStatic();
+
+/* highlight all static code blocks */
+$$('pre.code').forEach(function(el){ highlightEl(el); });
+</script>
+</body>
+</html>
